@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import FilterComponent from './FilterComponent';
-import TableComponent from './TableComponent';
-import { Student, Filters } from '@/lib/types';
+import Filter from './FilterComponent';
+import Table from './TableComponent';
 import Pagination from './Pagination';
+import { Student, Filters } from '@/lib/types';
 
 const StudentsTable: React.FC<{ students: Student[] }> = ({ students }) => {
   const [filteredStudents, setFilteredStudents] = useState<Student[]>(students);
@@ -28,9 +28,7 @@ const StudentsTable: React.FC<{ students: Student[] }> = ({ students }) => {
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
-
     const newValue = name === "no_of_questions" ? (value === "" ? null : parseInt(value)) : value || null;
-
     setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: newValue,
@@ -77,80 +75,9 @@ const StudentsTable: React.FC<{ students: Student[] }> = ({ students }) => {
         </button>
       </center>
       {showFilters && (
-        <div className="flex justify-center pt-10">
-          {["status", "year", "dept", "section", "no_of_questions"].map((filter) => (
-            <select
-              key={filter}
-              className="h-[70px] text-2xl mr-10 rounded"
-              name={filter}
-              onChange={handleFilterChange}
-              defaultValue=""
-            >
-              <option value="" disabled hidden>
-                {filter.replace('_', ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
-              </option>
-              <option value="">All</option>
-              {filter === "status" && (
-                <>
-                  <option value="attended">Attended</option>
-                  <option value="not attended">Not Attended</option>
-                </>
-              )}
-              {filter === "year" && (
-                <>
-                  <option value="2">2nd year</option>
-                  <option value="3">3rd year</option>
-                </>
-              )}
-              {filter === "dept" && (
-                <>
-                  <option value="CSE">CSE</option>
-                  <option value="ECE">ECE</option>
-                </>
-              )}
-              {filter === "section" && (
-                <>
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                  <option value="C">C</option>
-                  <option value="D">D</option>
-                </>
-              )}
-              {filter === "no_of_questions" && [4, 3, 2, 1, 0].map((val) => <option key={val} value={val}>{val}</option>)}
-            </select>
-          ))}
-        </div>
+        <Filter filters={filters} onFilterChange={handleFilterChange} />
       )}
-      <table className="ml-[110px] mr-[100px]">
-        <thead>
-          <tr>
-            <th className="w-[100px]">Rank</th>
-            <th className="w-[239px]">Username</th>
-            <th className="w-[150px]">Department</th>
-            <th className="w-[150px]">Section</th>
-            <th className="w-[100px]">Year</th>
-            <th className="w-[150px]">No. of Questions</th>
-            <th className="w-[150px]">Question ID</th>
-            <th className="w-[60px]">Finish Time</th>
-            <th className="w-[60px]">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentStudents.map((student, index) => (
-            <tr key={index}>
-              <td>{student.rank}</td>
-              <td>{student.username}</td>
-              <td>{student.dept}</td>
-              <td>{student.section}</td>
-              <td>{student.year}</td>
-              <td>{student.no_of_questions}</td>
-              <td>{student.question_ids?.join(', ')}</td>
-              <td>{student.finish_time}</td>
-              <td>{student.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table students={currentStudents} />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

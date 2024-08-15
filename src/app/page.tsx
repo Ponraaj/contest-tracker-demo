@@ -1,4 +1,3 @@
-// src/app/page.tsx
 import { createClient } from '@/lib/supabase/client';
 import StudentsTable from '@/components/StudentTable';
 
