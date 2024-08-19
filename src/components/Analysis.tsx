@@ -183,19 +183,21 @@ const MyDoughnutChart: React.FC = () => {
   const questionCounts = {
     notAttended: filteredData.filter(item => item.no_of_questions === null).length,
     0: filteredData.filter(item => item.no_of_questions === 0).length,
+    1: filteredData.filter(item => item.no_of_questions === 1).length,
     2: filteredData.filter(item => item.no_of_questions === 2).length,
     3: filteredData.filter(item => item.no_of_questions === 3).length,
     4: filteredData.filter(item => item.no_of_questions === 4).length,
   };
 
   const chartData = {
-    labels: ['Not Attended', '0 Questions', '2 Questions', '3 Questions', '4 Questions'],
+    labels: ['Not Attended', '0 Questions', '1 Question', '2 Questions', '3 Questions', '4 Questions'],
     datasets: [
       {
         label: 'Number of Students',
         data: [
           questionCounts.notAttended,
           questionCounts[0],
+          questionCounts[1],
           questionCounts[2],
           questionCounts[3],
           questionCounts[4]
@@ -203,9 +205,10 @@ const MyDoughnutChart: React.FC = () => {
         backgroundColor: [
           'rgb(128, 128, 128)',  // Grey for Not Attended
           'rgb(255, 99, 132)',
-          'rgb(54, 162, 235)',
+          'rgb(255, 159, 64)',
           'rgb(255, 205, 86)',
           'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
         ],
         borderWidth: 1,
       },
