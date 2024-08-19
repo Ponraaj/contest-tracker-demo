@@ -1,7 +1,10 @@
+"use client"
+import MyDoughnutChart from "@/components/Analysis";
+
 const Page =()=> {
   return (
     <div>
-      Analytics
+      <MyDoughnutChart/>
     </div>
   );
 };
