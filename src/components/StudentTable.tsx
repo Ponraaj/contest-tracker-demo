@@ -5,9 +5,11 @@ import Filter from './FilterComponent';
 import Table from './TableComponent';
 import Pagination from './Pagination';
 import { Student, Filters } from '@/lib/types';
+import { createClient } from '@/lib/supabase/client';
 
-const StudentsTable: React.FC<{ students: Student[] }> = ({ students }) => {
-  const [filteredStudents, setFilteredStudents] = useState<Student[]>(students);
+const StudentsTable: React.FC = () => {
+  const [students, setStudents] = useState<Student[]>([]);
+  const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [filters, setFilters] = useState<Filters>({
     no_of_questions: null,
     status: null,
@@ -16,7 +18,8 @@ const StudentsTable: React.FC<{ students: Student[] }> = ({ students }) => {
     year: null,
   });
   const [showFilters, setShowFilters] = useState(false);
-  
+  const [selectedContest, setSelectedContest] = useState('weekly_contest_409'); // Default contest
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [studentsPerPage] = useState(25); // Adjust as needed
@@ -34,6 +37,30 @@ const StudentsTable: React.FC<{ students: Student[] }> = ({ students }) => {
       [name]: newValue,
     }));
   };
+
+  const handleContestChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedContest(event.target.value);
+  };
+
+  const fetchData = async () => {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+      .from(selectedContest)
+      .select('username, no_of_questions, question_ids, finish_time, status, dept, year, section, rank');
+
+    if (error) {
+      console.error('Error fetching data:', error.message);
+    } else {
+      setStudents(data || []);
+      setFilteredStudents(data || []);
+      setCurrentPage(1); // Reset to first page whenever new data is fetched
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [selectedContest]);
 
   useEffect(() => {
     let filtered = students;
@@ -68,7 +95,13 @@ const StudentsTable: React.FC<{ students: Student[] }> = ({ students }) => {
 
   return (
     <div>
-      <h2 className="text-center pt-5 text-6xl">Weekly Contest 410</h2>
+      <select onChange={handleContestChange} value={selectedContest}>
+        <option value="weekly_contest_410">Weekly Contest 410</option>
+        <option value="weekly_contest_411">Weekly Contest 411</option>
+        <option value="biweekly_contest_137">Biweekly Contest 137</option>
+        {/* Add more contests as needed */}
+      </select>
+      <h2 className="text-center pt-5 text-6xl">{selectedContest.replace(/_/g, ' ')}</h2>
       <center>
         <button className='border-black border-2 pl-5 pr-5 mt-10 w-30 rounded h-[70px] text-3xl' onClick={toggleFilters}>
           Filter
