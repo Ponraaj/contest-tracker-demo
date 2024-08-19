@@ -1,3 +1,4 @@
+// StudentTable.tsx
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -6,6 +7,10 @@ import Table from './TableComponent';
 import Pagination from './Pagination';
 import { Student, Filters } from '@/lib/types';
 import { createClient } from '@/lib/supabase/client';
+import dynamic from 'next/dynamic';
+
+// Import LineChart dynamically
+const LineChart = dynamic(() => import('./Chart'), { ssr: false });
 
 const StudentsTable: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
@@ -19,6 +24,7 @@ const StudentsTable: React.FC = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [selectedContest, setSelectedContest] = useState('weekly_contest_409'); // Default contest
+  const [expandedRow, setExpandedRow] = useState<number | null>(null); // State to manage expanded row
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -93,6 +99,10 @@ const StudentsTable: React.FC = () => {
     setShowFilters((prev) => !prev);
   };
 
+  const toggleExpandRow = (index: number) => {
+    setExpandedRow(expandedRow === index ? null : index);
+  };
+
   return (
     <div>
       <select onChange={handleContestChange} value={selectedContest}>
@@ -110,7 +120,45 @@ const StudentsTable: React.FC = () => {
       {showFilters && (
         <Filter filters={filters} onFilterChange={handleFilterChange} />
       )}
-      <Table students={currentStudents} />
+      <table className="ml-[110px] mr-[100px]">
+        <thead>
+          <tr>
+            <th className="w-[100px]">Rank</th>
+            <th className="w-[239px]">Username</th>
+            <th className="w-[150px]">Department</th>
+            <th className="w-[150px]">Section</th>
+            <th className="w-[100px]">Year</th>
+            <th className="w-[150px]">No. of Questions</th>
+            <th className="w-[150px]">Question ID</th>
+            <th className="w-[60px]">Finish Time</th>
+            <th className="w-[60px]">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentStudents.map((student, index) => (
+            <React.Fragment key={index}>
+              <tr className={`hover:bg-gray-300 ease-out ${expandedRow === index ? 'bg-gray-100' : ''}`} onClick={() => toggleExpandRow(index)}>
+                <td>{student.rank}</td>
+                <td>{student.username}</td>
+                <td>{student.dept}</td>
+                <td>{student.section}</td>
+                <td>{student.year}</td>
+                <td>{student.no_of_questions}</td>
+                <td>{student.question_ids?.join(', ')}</td>
+                <td>{student.finish_time}</td>
+                <td>{student.status}</td>
+              </tr>
+              {expandedRow === index && (
+                <tr>
+                  <td colSpan={9}>
+                    <LineChart />
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
