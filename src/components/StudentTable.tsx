@@ -13,6 +13,23 @@ import dynamic from 'next/dynamic';
 const LineChart = dynamic(() => import('./Chart'), { ssr: false });
 
 const StudentsTable: React.FC = () => {
+  const USER_CONTEST_RANKING_HISTORY = `
+  query userContestRankingHistory($username: String!) {
+    userContestRankingHistory(username: $username) {
+      attended
+      trendDirection
+      problemsSolved
+      totalProblems
+      finishTimeInSeconds
+      rating
+      ranking
+      contest {
+        title
+        startTime
+      }
+    }
+  }
+`;
   const [students, setStudents] = useState<Student[]>([]);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [filters, setFilters] = useState<Filters>({
@@ -23,7 +40,7 @@ const StudentsTable: React.FC = () => {
     year: null,
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedContest, setSelectedContest] = useState('weekly_contest_409'); // Default contest
+  const [selectedContest, setSelectedContest] = useState('weekly_contest_410'); // Default contest
   const [expandedRow, setExpandedRow] = useState<number | null>(null); // State to manage expanded row
 
   // Pagination state
@@ -101,17 +118,18 @@ const StudentsTable: React.FC = () => {
 
   const toggleExpandRow = (index: number) => {
     setExpandedRow(expandedRow === index ? null : index);
+    
   };
 
   return (
     <div>
-      <select onChange={handleContestChange} value={selectedContest}>
+      <select className='border-solid border-[1px] border-black w-[184px] h-[40px] bg-white' onChange={handleContestChange} value={selectedContest}>
         <option value="weekly_contest_410">Weekly Contest 410</option>
         <option value="weekly_contest_411">Weekly Contest 411</option>
         <option value="biweekly_contest_137">Biweekly Contest 137</option>
         {/* Add more contests as needed */}
       </select>
-      <h2 className="text-center pt-5 text-6xl">{selectedContest.replace(/_/g, ' ')}</h2>
+      <h2 className="text-center pt-5 text-6xl">{selectedContest.replace(/_/g, ' ').toUpperCase()}</h2>
       <center>
         <button className='border-black border-2 pl-5 pr-5 mt-10 w-30 rounded h-[70px] text-3xl' onClick={toggleFilters}>
           Filter
@@ -148,13 +166,15 @@ const StudentsTable: React.FC = () => {
                 <td>{student.finish_time}</td>
                 <td>{student.status}</td>
               </tr>
-              {expandedRow === index && (
-                <tr>
-                  <td colSpan={9}>
-                    <LineChart />
-                  </td>
-                </tr>
-              )}
+              
+                {expandedRow === index && (
+                  <tr>
+                    <td colSpan={9} className="">
+                      <LineChart />
+                    </td>
+                  </tr>
+                )}
+                
             </React.Fragment>
           ))}
         </tbody>

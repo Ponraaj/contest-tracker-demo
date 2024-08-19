@@ -19,12 +19,16 @@ const data = {
     },
   ],
 };
-const LineChart:React.FC = () => {
+const LineChart:React.FC = (Contestdata:any) => {
+  console.log(Contestdata)
   return (
-    <div style={{ width: '700px', height: '700px' }}>
-      <h1>Example 1: Line Chart</h1>
-      <Line data={data} />
-    </div>
+    <div className="container flex justify-center items-center">
+  <div className='w-[700px]'>
+    {/* <h1 className="text-center mb-4">Example 1: Line Chart</h1> */}
+    <Line data={data} />
+  </div>
+</div>
+
   );
 };
 export default LineChart;
