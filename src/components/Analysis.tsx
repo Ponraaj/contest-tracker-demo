@@ -1,128 +1,3 @@
-// "use client";
-// import React, { useEffect, useState } from 'react';
-// import { Pie } from 'react-chartjs-2';
-// import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-// import { createClient } from '@/lib/supabase/client';
-
-// // Register Chart.js components
-// ChartJS.register(Title, Tooltip, Legend, ArcElement);
-
-// const supabase = createClient();
-
-// interface SectionData {
-//   section: string;
-//   totalQuestions: number;
-// }
-
-// const MyDoughnutChart: React.FC = () => {
-//   const [data, setData] = useState<any[]>([]);
-//   const [filteredData, setFilteredData] = useState<SectionData[]>([]);
-//   const [colleges] = useState<string[]>(['All', 'CIT', 'CITAR']);
-//   const [years] = useState<string[]>(['All', '2', '3', '4']);
-//   const [selectedCollege, setSelectedCollege] = useState<string>('All');
-//   const [selectedYear, setSelectedYear] = useState<string>('All');
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const { data, error } = await supabase
-//         .from('weekly_contest_411')
-//         .select('dept, section, no_of_questions, college, year');
-
-//       if (error) {
-//         console.error('Error fetching data:', error);
-//         return;
-//       }
-      
-//       setData(data || []);
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   useEffect(() => {
-//     const filtered = data.filter(item => {
-//       const collegeMatch = selectedCollege === 'All' || item.college === selectedCollege;
-//       const yearMatch = selectedYear === 'All' || item.year === selectedYear;
-//       return collegeMatch && yearMatch;
-//     });
-
-//     const groupedSections = filtered.reduce((acc: any, item: any) => {
-//       const { section, no_of_questions } = item;
-//       if (!acc[section]) {
-//         acc[section] = 0;
-//       }
-//       acc[section] += no_of_questions;
-//       return acc;
-//     }, {});
-
-//     const formattedSections: SectionData[] = Object.keys(groupedSections).map(section => ({
-//       section,
-//       totalQuestions: groupedSections[section],
-//     }));
-
-//     setFilteredData(formattedSections);
-//   }, [selectedCollege, selectedYear, data]);
-
-//   const chartData = {
-//     labels: filteredData.map(item => item.section),
-//     datasets: [
-//       {
-//         label: 'Total Questions',
-//         data: filteredData.map(item => item.totalQuestions),
-//         backgroundColor: [
-//           'rgb(255, 99, 132)',
-//           'rgb(54, 162, 235)',
-//           'rgb(255, 205, 86)',
-//           'rgb(75, 192, 192)',
-//           'rgb(153, 102, 255)',
-//           'rgb(255, 159, 64)',
-//           // Add more colors if needed
-//         ],
-//         borderWidth: 1,
-//       },
-//     ],
-//   };
-
-//   return (
-//     <div>
-//       <div>
-//         <label htmlFor="college">Select College:</label>
-//         <select
-//           id="college"
-//           value={selectedCollege}
-//           onChange={(e) => setSelectedCollege(e.target.value)}
-//         >
-//           {colleges.map(college => (
-//             <option key={college} value={college}>{college}</option>
-//           ))}
-//         </select>
-//       </div>
-
-//       <div>
-//         <label htmlFor="year">Select Year:</label>
-//         <select
-//           id="year"
-//           value={selectedYear}
-//           onChange={(e) => setSelectedYear(e.target.value)}
-//         >
-//           {years.map(year => (
-//             <option key={year} value={year}>{year}</option>
-//           ))}
-//         </select>
-//       </div>
-
-//       {filteredData.length > 0 ? (
-//         <div style={{ width: '400px', height: '400px' }}>
-//           <Pie data={chartData} />
-//         </div>
-//       ) : (
-//         <p>No data available for the selected filters.</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default MyDoughnutChart;
 "use client";
 import React, { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
@@ -140,15 +15,40 @@ const MyDoughnutChart: React.FC = () => {
   const [years, setYears] = useState<string[]>(['All']);
   const [departments, setDepartments] = useState<string[]>(['All']);
   const [sections, setSections] = useState<string[]>(['All']);
+  const [contests, setContests] = useState<string[]>([]);
   const [selectedCollege, setSelectedCollege] = useState<string>('All');
   const [selectedYear, setSelectedYear] = useState<string>('All');
   const [selectedDepartment, setSelectedDepartment] = useState<string>('All');
   const [selectedSection, setSelectedSection] = useState<string>('All');
+  const [selectedContest, setSelectedContest] = useState<string>('');
+
+  useEffect(() => {
+    const fetchContests = async () => {
+      const { data: contestsData, error } = await supabase
+        .from('contests')
+        .select('contest_name');
+
+      if (error) {
+        console.error('Error fetching contests:', error);
+        return;
+      }
+
+      const contestNames = contestsData.map(contest => contest.contest_name);
+      setContests(contestNames);
+      if (contestNames.length > 0) {
+        setSelectedContest(contestNames[0]);
+      }
+    };
+
+    fetchContests();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!selectedContest) return;
+
       const { data, error } = await supabase
-        .from('weekly_contest_411')
+        .from(selectedContest)
         .select('*');
 
       if (error) {
@@ -166,7 +66,7 @@ const MyDoughnutChart: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, [selectedContest]);
 
   useEffect(() => {
     const filtered = data.filter(item => {
@@ -215,66 +115,89 @@ const MyDoughnutChart: React.FC = () => {
     ],
   };
 
+  const capitalizeFirstLetter = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   return (
     <div className="flex flex-row items-start pt-[100px] pl-[50px] mx-[300px]">
       <div className='text-2xl'>
-        <h1 className='text-6xl pb-[30px]'>Weekly Contest 411</h1>
-      <div className="mb-4">
-        <label htmlFor="college">Select College:</label>
-        <select
-          id="college"
-          value={selectedCollege}
-          onChange={(e) => setSelectedCollege(e.target.value)}
-        >
-          {colleges.map(college => (
-            <option key={college} value={college}>{college}</option>
-          ))}
-        </select>
-      </div>
+        <h1 className='text-6xl pb-[30px]'>{capitalizeFirstLetter(selectedContest)}</h1>
+        
+        <div className="mb-4">
+          <label htmlFor="contest">Select Contest:</label>
+          <select
+            id="contest"
+            value={selectedContest}
+            onChange={(e) => setSelectedContest(e.target.value)}
+            className="ml-2 p-2 border rounded"
+          >
+            {contests.map(contest => (
+              <option key={contest} value={contest}>{contest}</option>
+            ))}
+          </select>
+        </div>
 
-      <div className="mb-4">
-        <label htmlFor="year">Select Year:</label>
-        <select
-          id="year"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(e.target.value)}
-        >
-          {years.map(year => (
-            <option key={year} value={year}>{year}</option>
-          ))}
-        </select>
-      </div>
+        <div className="mb-4">
+          <label htmlFor="college">Select College:</label>
+          <select
+            id="college"
+            value={selectedCollege}
+            onChange={(e) => setSelectedCollege(e.target.value)}
+            className="ml-2 p-2 border rounded"
+          >
+            {colleges.map(college => (
+              <option key={college} value={college}>{college}</option>
+            ))}
+          </select>
+        </div>
 
-      <div className="mb-4">
-        <label htmlFor="department">Select Department:</label>
-        <select
-          id="department"
-          value={selectedDepartment}
-          onChange={(e) => setSelectedDepartment(e.target.value)}
-        >
-          {departments.map(dept => (
-            <option key={dept} value={dept}>{dept}</option>
-          ))}
-        </select>
-      </div>
+        <div className="mb-4">
+          <label htmlFor="year">Select Year:</label>
+          <select
+            id="year"
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className="ml-2 p-2 border rounded"
+          >
+            {years.map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        </div>
 
-      <div className="mb-4">
-        <label htmlFor="section">Select Section:</label>
-        <select
-          id="section"
-          value={selectedSection}
-          onChange={(e) => setSelectedSection(e.target.value)}
-        >
-          {sections.map(section => (
-            <option key={section} value={section}>{section}</option>
-          ))}
-        </select>
-      </div>
+        <div className="mb-4">
+          <label htmlFor="department">Select Department:</label>
+          <select
+            id="department"
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+            className="ml-2 p-2 border rounded"
+          >
+            {departments.map(dept => (
+              <option key={dept} value={dept}>{dept}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="section">Select Section:</label>
+          <select
+            id="section"
+            value={selectedSection}
+            onChange={(e) => setSelectedSection(e.target.value)}
+            className="ml-2 p-2 border rounded"
+          >
+            {sections.map(section => (
+              <option key={section} value={section}>{section}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {filteredData.length > 0 ? (
         <div className="w-[600px] h-[600px]">
-            <Pie data={chartData} />
+          <Pie data={chartData} />
         </div>
       ) : (
         <p>No data available for the selected filters.</p>
