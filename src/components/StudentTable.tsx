@@ -3,12 +3,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Filter from './FilterComponent';
-import Table from './TableComponent';
 import Pagination from './Pagination';
 import { Student, Filters } from '@/lib/types';
 import { createClient } from '@/lib/supabase/client';
 import dynamic from 'next/dynamic';
-
 // Import LineChart dynamically
 const LineChart = dynamic(() => import('./Chart'), { ssr: false });
 
