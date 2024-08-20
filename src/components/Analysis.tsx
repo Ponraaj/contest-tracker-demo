@@ -216,8 +216,10 @@ const MyDoughnutChart: React.FC = () => {
   };
 
   return (
-    <div>
-      <div>
+    <div className="flex flex-row items-start pt-[100px] pl-[50px] mx-[300px]">
+      <div className='text-2xl'>
+        <h1 className='text-6xl pb-[30px]'>Weekly Contest 411</h1>
+      <div className="mb-4">
         <label htmlFor="college">Select College:</label>
         <select
           id="college"
@@ -230,7 +232,7 @@ const MyDoughnutChart: React.FC = () => {
         </select>
       </div>
 
-      <div>
+      <div className="mb-4">
         <label htmlFor="year">Select Year:</label>
         <select
           id="year"
@@ -243,7 +245,7 @@ const MyDoughnutChart: React.FC = () => {
         </select>
       </div>
 
-      <div>
+      <div className="mb-4">
         <label htmlFor="department">Select Department:</label>
         <select
           id="department"
@@ -256,7 +258,7 @@ const MyDoughnutChart: React.FC = () => {
         </select>
       </div>
 
-      <div>
+      <div className="mb-4">
         <label htmlFor="section">Select Section:</label>
         <select
           id="section"
@@ -268,10 +270,11 @@ const MyDoughnutChart: React.FC = () => {
           ))}
         </select>
       </div>
+      </div>
 
       {filteredData.length > 0 ? (
-        <div style={{ width: '400px', height: '400px' }}>
-          <Pie data={chartData} />
+        <div className="w-[600px] h-[600px]">
+            <Pie data={chartData} />
         </div>
       ) : (
         <p>No data available for the selected filters.</p>
