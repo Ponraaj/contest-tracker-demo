@@ -7,18 +7,43 @@ interface FilterComponentProps {
 }
 
 const FilterComponent: React.FC<FilterComponentProps> = ({ filters, onFilterChange }) => {
+  const toTitleCase = (str: string) => {
+    return str
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
+  const getFilterLabel = (filter: string) => {
+    switch (filter) {
+      case 'status':
+        return 'Status';
+      case 'year':
+        return 'Year';
+      case 'dept':
+        return 'Department';
+      case 'section':
+        return 'Section';
+      case 'no_of_questions':
+        return 'Number of Questions';
+      default:
+        return toTitleCase(filter.replace('_', ' '));
+    }
+  };
+
   return (
-    <div className="flex justify-center pt-10">
+    <div className="flex justify-center space-x-6 py-4">
       {["status", "year", "dept", "section", "no_of_questions"].map((filter) => (
         <select
           key={filter}
-          className="h-[70px] text-2xl mr-10 border-black border-[1px] p-1 rounded"
+          className="border border-gray-300 rounded-lg p-2 text-lg bg-white shadow-md focus:outline-none focus:ring focus:border-blue-300"
           name={filter}
           onChange={onFilterChange}
           defaultValue=""
         >
           <option value="" disabled hidden>
-            {filter.replace('_', ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
+            {getFilterLabel(filter)}
           </option>
           <option value="">All</option>
           {filter === "status" && (
@@ -29,14 +54,14 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ filters, onFilterChan
           )}
           {filter === "year" && (
             <>
-              <option value="2">2nd year</option>
-              <option value="3">3rd year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
             </>
           )}
           {filter === "dept" && (
             <>
               <option value="CSE">CSE</option>
-              <option value="ECE">ECE</option>
+              {/* <option value="ECE">ECE</option> */}
             </>
           )}
           {filter === "section" && (
@@ -47,7 +72,9 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ filters, onFilterChan
               <option value="D">D</option>
             </>
           )}
-          {filter === "no_of_questions" && [4, 3, 2, 1, 0].map((val) => <option key={val} value={val}>{val}</option>)}
+          {filter === "no_of_questions" && [4, 3, 2, 1, 0].map((val) => (
+            <option key={val} value={val}>{val}</option>
+          ))}
         </select>
       ))}
     </div>

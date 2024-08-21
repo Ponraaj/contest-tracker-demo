@@ -1,41 +1,3 @@
-// // page.js this is the entry point of application
-
-// "use client";
-// import React from 'react';
-// import dynamic from 'next/dynamic';
-// import 'chart.js/auto';
-// import getLeetCodeUserDetails from '@/lib/leetcode';
-
-// const Line = dynamic(() => import('react-chartjs-2').then((mod) => mod.Line), {
-//   ssr: false,
-// });
-// const data = {
-//   labels: ['January', 'February', 'March', 'April', 'May'],
-//   datasets: [
-//     {
-//       label: 'GeeksforGeeks Line Chart',
-//       data: [65, 59, 80, 81, 56],
-//       fill: false,
-//       borderColor: 'rgb(75, 192, 192)',
-//       tension: 0.1,
-//     },
-//   ],
-// };
-// const LineChart:React.FC = (Contestdata:any) => {
-//   console.log(Contestdata)
-//   return (
-//     <div className="container flex justify-center items-center">
-//   <div className='w-[700px]'>
-//     {/* <h1 className="text-center mb-4">Example 1: Line Chart</h1> */}
-//     <Line data={data} />
-//   </div>
-// </div>
-
-//   );
-// };
-// export default LineChart;
-
-// LineChart.tsx
 "use client";
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -68,26 +30,28 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                 label: 'Contest Rating',
                 data: lastFourContests.map((contest: any) => contest?.rating || 0),
                 fill: false,
-                borderColor: 'rgb(75, 192, 192)',
+                borderColor: 'green',
                 tension: 0.5,
                 pointBackgroundColor: lastFourContests.map((contest: any) =>
-                  contest?.attended ? 'rgb(75, 192, 192)' : 'red'
+                  contest?.attended ? 'green' : 'red'
+                ),
+                pointBorderColor: lastFourContests.map((contest: any) =>
+                  contest?.attended ? 'green' : 'red'
                 ),
                 pointRadius: 8,
               },
               {
-                label: 'Not Attended',
-                fill: false,
+                label: 'Contest Rating',
                 borderColor: 'red',
               }
             ],
           });
         } else {
-          setChartData(null); // No data available
+          setChartData(null);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
-        setChartData(null); // Handle error state
+        setChartData(null);
       } finally {
         setLoading(false);
       }
@@ -117,7 +81,7 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                     const label = context.dataset.label || '';
                     const value = context.raw;
                     const index = context.dataIndex;
-                    const attended = chartData.datasets[0].pointBackgroundColor[index] === 'rgb(75, 192, 192)';
+                    const attended = chartData.datasets[0].pointBackgroundColor[index] === 'green';
                     const status = attended ? 'Attended' : 'Not Attended';
 
                     return `${label}: ${status} - Rating: ${value}`;
@@ -127,9 +91,15 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
             },
             elements: {
               point: {
-                borderColor: 'rgb(75, 192, 192)',
+                borderColor: (context) => {
+                  const index = context.dataIndex;
+                  return chartData.datasets[0].pointBackgroundColor[index];
+                },
                 borderWidth: 2,
-                hoverBorderColor: 'black',
+                hoverBorderColor: (context) => {
+                  const index = context.dataIndex;
+                  return chartData.datasets[0].pointBackgroundColor[index];
+                },
                 hoverBorderWidth: 2,
               },
             },
