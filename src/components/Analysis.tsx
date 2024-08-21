@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import { createClient } from '@/lib/supabase/client';
 
-ChartJS.register(Title, Tooltip, Legend, ArcElement);
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 const supabase = createClient();
 
-const MyDoughnutChart: React.FC = () => {
+const MyBarChart: React.FC = () => {
   const [data, setData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [colleges, setColleges] = useState<string[]>(['All']);
@@ -21,7 +21,8 @@ const MyDoughnutChart: React.FC = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string>('All');
   const [selectedSection, setSelectedSection] = useState<string>('All');
   const [selectedContest, setSelectedContest] = useState<string>('');
-  const toTitleCase = (str) => {
+  
+  const toTitleCase = (str: string) => {
     return str
       .toLowerCase()
       .split(' ')
@@ -122,12 +123,8 @@ const MyDoughnutChart: React.FC = () => {
     ],
   };
 
-  const capitalizeFirstLetter = (string: string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
   return (
-    <div className="flex flex-row items-start pt-[100px] pl-[50px] mx-[300px]">
+    <div className="flex flex-row items-start pt-[100px] pl-[50px] mr-[300px] ml-[50px]">
       <div className='text-2xl'>
         <h1 className='text-5xl pb-[30px]'>{toTitleCase(selectedContest.replace(/_/g, ' '))}</h1>
         <div className="mb-4">
@@ -202,8 +199,8 @@ const MyDoughnutChart: React.FC = () => {
       </div>
 
       {filteredData.length > 0 ? (
-        <div className="w-[600px] h-[600px]">
-          <Pie data={chartData} />
+        <div className="pt-[10px] ml-[100px] w-[900px] h-[900px]">
+          <Bar data={chartData} />
         </div>
       ) : (
         <p>No data available for the selected filters.</p>
@@ -212,4 +209,4 @@ const MyDoughnutChart: React.FC = () => {
   );
 };
 
-export default MyDoughnutChart;
+export default MyBarChart;

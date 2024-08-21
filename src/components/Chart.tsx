@@ -58,7 +58,7 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
     const fetchData = async () => {
       try {
         const data = await getLeetCodeUserDetails(username);
-        
+
         if (data && data.contestRanking.length > 0) {
           const lastFourContests = data.contestRanking.slice(-5);
           setChartData({
@@ -66,19 +66,20 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
             datasets: [
               {
                 label: 'Contest Rating',
-                // data: data.contestRanking.map((contest: any) =>
-                //   contest?.rating || 0
-                data: lastFourContests.map((contest: any) =>{
-                    if(contest?.attended){
-                      return contest?.rating 
-                    }else{
-                      return 0
-                    }
-                }),
+                data: lastFourContests.map((contest: any) => contest?.rating || 0),
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1,
+                tension: 0.5,
+                pointBackgroundColor: lastFourContests.map((contest: any) =>
+                  contest?.attended ? 'rgb(75, 192, 192)' : 'red'
+                ),
+                pointRadius: 8,
               },
+              {
+                label: 'Not Attended',
+                fill: false,
+                borderColor: 'red',
+              }
             ],
           });
         } else {
@@ -106,7 +107,34 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
   return (
     <div className="container flex justify-center items-center">
       <div className='w-[700px]'>
-        <Line data={chartData} />
+        <Line
+          data={chartData}
+          options={{
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    const label = context.dataset.label || '';
+                    const value = context.raw;
+                    const index = context.dataIndex;
+                    const attended = chartData.datasets[0].pointBackgroundColor[index] === 'rgb(75, 192, 192)';
+                    const status = attended ? 'Attended' : 'Not Attended';
+
+                    return `${label}: ${status} - Rating: ${value}`;
+                  },
+                },
+              },
+            },
+            elements: {
+              point: {
+                borderColor: 'rgb(75, 192, 192)',
+                borderWidth: 2,
+                hoverBorderColor: 'black',
+                hoverBorderWidth: 2,
+              },
+            },
+          }}
+        />
       </div>
     </div>
   );
