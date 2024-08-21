@@ -1,4 +1,3 @@
-// StudentTable.tsx
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -7,27 +6,14 @@ import Pagination from './Pagination';
 import { Student, Filters } from '@/lib/types';
 import { createClient } from '@/lib/supabase/client';
 import dynamic from 'next/dynamic';
+<<<<<<< HEAD
 // Import LineChart dynamically
+=======
+
+>>>>>>> 16f0d99 (added contest rating graph)
 const LineChart = dynamic(() => import('./Chart'), { ssr: false });
 
 const StudentsTable: React.FC = () => {
-  const USER_CONTEST_RANKING_HISTORY = `
-  query userContestRankingHistory($username: String!) {
-    userContestRankingHistory(username: $username) {
-      attended
-      trendDirection
-      problemsSolved
-      totalProblems
-      finishTimeInSeconds
-      rating
-      ranking
-      contest {
-        title
-        startTime
-      }
-    }
-  }
-`;
   const [students, setStudents] = useState<Student[]>([]);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [filters, setFilters] = useState<Filters>({
@@ -38,12 +24,13 @@ const StudentsTable: React.FC = () => {
     year: null,
   });
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedContest, setSelectedContest] = useState('weekly_contest_410'); // Default contest
-  const [expandedRow, setExpandedRow] = useState<number | null>(null); // State to manage expanded row
+  const [selectedContest, setSelectedContest] = useState('weekly_contest_410');
+  const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [studentsPerPage] = useState(25); // Adjust as needed
+  const [studentsPerPage] = useState(25);
 
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
@@ -64,18 +51,24 @@ const StudentsTable: React.FC = () => {
   };
 
   const fetchData = async () => {
-    const supabase = createClient();
+    setLoading(true);
+    setError(null);
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from(selectedContest)
+        .select('leetcode_id,username, no_of_questions, question_ids, finish_time, status, dept, year, section, rank');
 
-    const { data, error } = await supabase
-      .from(selectedContest)
-      .select('username, no_of_questions, question_ids, finish_time, status, dept, year, section, rank');
+      if (error) throw error;
 
-    if (error) {
-      console.error('Error fetching data:', error.message);
-    } else {
       setStudents(data || []);
       setFilteredStudents(data || []);
-      setCurrentPage(1); // Reset to first page whenever new data is fetched
+      setCurrentPage(1);
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+      setError('Failed to fetch data');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -107,7 +100,7 @@ const StudentsTable: React.FC = () => {
     }
 
     setFilteredStudents(filtered);
-    setCurrentPage(1); // Reset to first page whenever filters change
+    setCurrentPage(1);
   }, [filters, students]);
 
   const toggleFilters = () => {
@@ -116,8 +109,19 @@ const StudentsTable: React.FC = () => {
 
   const toggleExpandRow = (index: number) => {
     setExpandedRow(expandedRow === index ? null : index);
-    
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
+  if (filteredStudents.length === 0) {
+    return <p>No students match the current filters.</p>;
+  }
 
   return (
     <div>
@@ -133,9 +137,7 @@ const StudentsTable: React.FC = () => {
           Filter
         </button>
       </center>
-      {showFilters && (
-        <Filter filters={filters} onFilterChange={handleFilterChange} />
-      )}
+      {showFilters && <Filter filters={filters} onFilterChange={handleFilterChange} />}
       <table className="ml-[110px] mr-[100px]">
         <thead>
           <tr>
@@ -164,24 +166,19 @@ const StudentsTable: React.FC = () => {
                 <td>{student.finish_time}</td>
                 <td>{student.status}</td>
               </tr>
-              
-                {expandedRow === index && (
-                  <tr>
-                    <td colSpan={9} className="">
-                      <LineChart />
-                    </td>
-                  </tr>
-                )}
-                
+
+              {expandedRow === index && (
+                <tr>
+                  <td colSpan={9}>
+                    <LineChart username={student.leetcode_id} />
+                  </td>
+                </tr>
+              )}
             </React.Fragment>
           ))}
         </tbody>
       </table>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </div>
   );
 };

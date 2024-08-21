@@ -1,5 +1,6 @@
 
 export interface Student {
+    leetcode_id: string | null;
     username: string;
     no_of_questions: number | null;
     question_ids: string[] | null;
