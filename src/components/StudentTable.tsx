@@ -6,11 +6,7 @@ import Pagination from './Pagination';
 import { Student, Filters } from '@/lib/types';
 import { createClient } from '@/lib/supabase/client';
 import dynamic from 'next/dynamic';
-<<<<<<< HEAD
 // Import LineChart dynamically
-=======
-
->>>>>>> 16f0d99 (added contest rating graph)
 const LineChart = dynamic(() => import('./Chart'), { ssr: false });
 
 const StudentsTable: React.FC = () => {
