@@ -33,6 +33,14 @@ const StudentsTable: React.FC = () => {
   const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
 
+  const toTitleCase = (str) => {
+    return str
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
     const newValue = name === "no_of_questions" ? (value === "" ? null : parseInt(value)) : value || null;
@@ -127,7 +135,7 @@ const StudentsTable: React.FC = () => {
         <option value="biweekly_contest_137">Biweekly Contest 137</option>
         {/* Add more contests as needed */}
       </select>
-      <h2 className="text-center pt-5 text-6xl">{selectedContest.replace(/_/g, ' ').toUpperCase()}</h2>
+      <h2 className="text-center pt-5 text-6xl">{toTitleCase(selectedContest.replace(/_/g, ' '))}</h2>
       <center>
         <button className='border-black border-2 pl-5 pr-5 mt-10 w-30 rounded h-[70px] text-3xl' onClick={toggleFilters}>
           Filter

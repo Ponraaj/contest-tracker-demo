@@ -21,6 +21,13 @@ const MyDoughnutChart: React.FC = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string>('All');
   const [selectedSection, setSelectedSection] = useState<string>('All');
   const [selectedContest, setSelectedContest] = useState<string>('');
+  const toTitleCase = (str) => {
+    return str
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   useEffect(() => {
     const fetchContests = async () => {
@@ -122,18 +129,17 @@ const MyDoughnutChart: React.FC = () => {
   return (
     <div className="flex flex-row items-start pt-[100px] pl-[50px] mx-[300px]">
       <div className='text-2xl'>
-        <h1 className='text-6xl pb-[30px]'>{capitalizeFirstLetter(selectedContest)}</h1>
-        
+        <h1 className='text-5xl pb-[30px]'>{toTitleCase(selectedContest.replace(/_/g, ' '))}</h1>
         <div className="mb-4">
           <label htmlFor="contest">Select Contest:</label>
           <select
             id="contest"
             value={selectedContest}
             onChange={(e) => setSelectedContest(e.target.value)}
-            className="ml-2 p-2 border rounded"
+            className="ml-2 p-2 border-solid border-[1px] border-black rounded"
           >
             {contests.map(contest => (
-              <option key={contest} value={contest}>{contest}</option>
+              <option key={contest} value={contest}>{toTitleCase(contest.replace(/_/g, ' '))}</option>
             ))}
           </select>
         </div>
@@ -144,7 +150,7 @@ const MyDoughnutChart: React.FC = () => {
             id="college"
             value={selectedCollege}
             onChange={(e) => setSelectedCollege(e.target.value)}
-            className="ml-2 p-2 border rounded"
+            className="ml-2 p-2 border-solid border-[1px] border-black rounded"
           >
             {colleges.map(college => (
               <option key={college} value={college}>{college}</option>
@@ -158,7 +164,7 @@ const MyDoughnutChart: React.FC = () => {
             id="year"
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="ml-2 p-2 border rounded"
+            className="ml-2 p-2 border-solid border-[1px] border-black rounded"
           >
             {years.map(year => (
               <option key={year} value={year}>{year}</option>
@@ -172,7 +178,7 @@ const MyDoughnutChart: React.FC = () => {
             id="department"
             value={selectedDepartment}
             onChange={(e) => setSelectedDepartment(e.target.value)}
-            className="ml-2 p-2 border rounded"
+            className="ml-2 p-2 border-solid border-[1px] border-black rounded"
           >
             {departments.map(dept => (
               <option key={dept} value={dept}>{dept}</option>
@@ -186,7 +192,7 @@ const MyDoughnutChart: React.FC = () => {
             id="section"
             value={selectedSection}
             onChange={(e) => setSelectedSection(e.target.value)}
-            className="ml-2 p-2 border rounded"
+            className="ml-2 p-2 border-solid border-[1px] border-black rounded"
           >
             {sections.map(section => (
               <option key={section} value={section}>{section}</option>
