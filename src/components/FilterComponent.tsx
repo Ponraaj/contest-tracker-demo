@@ -19,6 +19,8 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ filters, onFilterChan
     switch (filter) {
       case 'status':
         return 'Status';
+      case 'college':
+        return 'College';
       case 'year':
         return 'Year';
       case 'dept':
@@ -34,7 +36,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ filters, onFilterChan
 
   return (
     <div className="flex justify-center space-x-6 py-4">
-      {["status", "year", "dept", "section", "no_of_questions"].map((filter) => (
+      {["status", "college", "year", "dept", "section", "no_of_questions"].map((filter) => (
         <select
           key={filter}
           className="border border-gray-300 rounded-lg p-2 text-lg bg-white shadow-md focus:outline-none focus:ring focus:border-blue-300"
@@ -50,6 +52,12 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ filters, onFilterChan
             <>
               <option value="attended">Attended</option>
               <option value="not attended">Not Attended</option>
+            </>
+          )}
+          {filter === "college" && (
+            <>
+              <option value="CIT">CIT</option>
+              <option value="CITAR">CITAR</option>
             </>
           )}
           {filter === "year" && (

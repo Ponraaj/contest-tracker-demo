@@ -10,6 +10,7 @@ export interface Student {
     year: string | null;
     section: string | null;
     rank: number | null;
+    college:string | null;
   }
   
   export interface Filters {
@@ -18,5 +19,6 @@ export interface Student {
     dept: string | null;
     section: string | null;
     year: string | null;
+    college:string | null;
   }
   

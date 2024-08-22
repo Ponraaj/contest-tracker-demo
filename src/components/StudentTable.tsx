@@ -20,6 +20,7 @@ const StudentsTable: React.FC = () => {
     dept: null,
     section: null,
     year: null,
+    college: null,
   });
   const [showFilters, setShowFilters] = useState(false);
   const [contests, setContests] = useState<string[]>([]);
@@ -84,7 +85,7 @@ const StudentsTable: React.FC = () => {
       const supabase = createClient();
       const { data, error } = await supabase
         .from(selectedContest)
-        .select('leetcode_id,username, no_of_questions, question_ids, finish_time, status, dept, year, section, rank');
+        .select('leetcode_id,username, no_of_questions, question_ids, finish_time, status, dept, year, section, rank, college');
 
       if (error) throw error;
 
@@ -122,6 +123,10 @@ const StudentsTable: React.FC = () => {
 
     if (filters.dept !== null) {
       filtered = filtered.filter((student) => student.dept === filters.dept);
+    }
+
+    if (filters.college !== null) {
+      filtered = filtered.filter((student) => student.college === filters.college);
     }
 
     if (filters.year !== null) {
@@ -197,6 +202,7 @@ const StudentsTable: React.FC = () => {
       <th className="py-3 px-4">Question ID</th>
       <th className="py-3 px-4">Finish Time</th>
       <th className="py-3 px-4">Status</th>
+      
     </tr>
   </thead>
   <tbody>
