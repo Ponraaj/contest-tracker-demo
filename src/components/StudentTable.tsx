@@ -168,15 +168,14 @@ const StudentsTable: React.FC = () => {
       </div>
       <h2 className="text-center text-5xl font-bold mb-6">{toTitleCase(selectedContest.replace(/_/g, ' '))}</h2>
       <div className="flex justify-center mb-10">
-        <button
-          className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-100 hover:bg-gray-200"
+        <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-100 hover:bg-gray-200"
           onClick={toggleFilters}
         >
           Filter
         </button>
       </div>
       {showFilters && <Filter filters={filters} onFilterChange={handleFilterChange} />}
-      <table className="w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+      {/* <table className="w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden shadow-left-right">
         <thead className="bg-gray-800 text-white">
           <tr>
             <th className="py-3 px-4">Rank</th>
@@ -227,7 +226,59 @@ const StudentsTable: React.FC = () => {
             </tr>
           )}
         </tbody>
-      </table>
+      </table> */}
+     <table className="w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden shadow-left-right">
+  <thead className="bg-gray-800 text-white">
+    <tr>
+      <th className="py-3 px-4">Rank</th>
+      <th className="py-3 px-4">Username</th>
+      <th className="py-3 px-4">Department</th>
+      <th className="py-3 px-4">Section</th>
+      <th className="py-3 px-4">Year</th>
+      <th className="py-3 px-4">No. of Questions</th>
+      <th className="py-3 px-4">Question ID</th>
+      <th className="py-3 px-4">Finish Time</th>
+      <th className="py-3 px-4">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {filteredStudents.length > 0 ? (
+      currentStudents.map((student, index) => (
+        <React.Fragment key={index}>
+          <tr
+            className={`cursor-pointer text-center transform transition-transform duration-200 hover:scale-x-105 hover:shadow-lg hover:border-solid hover:bg-yellow-50 ${
+              expandedRow === index ? 'bg-gray-100' : 'bg-white'
+            } ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
+            onClick={() => toggleExpandRow(index)}
+          >
+            <td className="py-3 px-4">{student.rank}</td>
+            <td className="py-3 px-4">{student.username}</td>
+            <td className="py-3 px-4">{student.dept}</td>
+            <td className="py-3 px-4">{student.section}</td>
+            <td className="py-3 px-4">{student.year}</td>
+            <td className="py-3 px-4">{student.no_of_questions}</td>
+            <td className="py-3 px-4">{student.question_ids?.join(', ')}</td>
+            <td className="py-3 px-4">{student.finish_time}</td>
+            <td className="py-3 px-4">{student.status}</td>
+          </tr>
+          {expandedRow === index && (
+            <tr>
+              <td colSpan={9} className="bg-gray-100 p-4">
+                <LineChart username={student.leetcode_id} />
+              </td>
+            </tr>
+          )}
+        </React.Fragment>
+      ))
+    ) : (
+      <tr>
+        <td colSpan={9} className="text-center py-4">
+          No students match the current filters.
+        </td>
+      </tr>
+    )}
+  </tbody>
+</table>
       {filteredStudents.length > 0 && (
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       )}
