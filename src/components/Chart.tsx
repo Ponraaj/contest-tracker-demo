@@ -1,8 +1,10 @@
+
 "use client";
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import 'chart.js/auto';
 import getLeetCodeUserDetails from '@/lib/leetcode/index';
+import { ThreeDots } from 'react-loader-spinner';
 
 const Line = dynamic(() => import('react-chartjs-2').then((mod) => mod.Line), {
   ssr: false,
@@ -18,6 +20,7 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const data = await getLeetCodeUserDetails(username);
 
@@ -27,11 +30,11 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
             labels: lastFourContests.map((contest: any) => contest?.contest?.title || 'N/A'),
             datasets: [
               {
-                label: 'Contest Rating',
+                label: '',  // Set the label to an empty string
                 data: lastFourContests.map((contest: any) => contest?.rating || 0),
                 fill: false,
                 borderColor: 'green',
-                tension: 0.5,
+                tension: 0.1,
                 pointBackgroundColor: lastFourContests.map((contest: any) =>
                   contest?.attended ? 'green' : 'red'
                 ),
@@ -40,10 +43,6 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                 ),
                 pointRadius: 8,
               },
-              {
-                label: 'Contest Rating',
-                borderColor: 'red',
-              }
             ],
           });
         } else {
@@ -61,7 +60,17 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
   }, [username]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='pl-[800px]'> <ThreeDots
+      visible={true}
+      height="80"
+      width="80"
+      color="#4fa94d"
+      radius="9"
+      ariaLabel="three-dots-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+      />
+    </div>;
   }
 
   if (!chartData || chartData.labels.length === 0) {
@@ -70,11 +79,15 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
 
   return (
     <div className="container flex justify-center items-center">
-      <div className='w-[700px]'>
+      <div className='w-[700px] pl-[100px]'>
+      <p className='pl-[150px] '>Previous 5 contest rankings</p>
         <Line
           data={chartData}
           options={{
             plugins: {
+              legend: {
+                display: false, // Disable the legend to remove the label box
+              },
               tooltip: {
                 callbacks: {
                   label: (context) => {
@@ -84,7 +97,7 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                     const attended = chartData.datasets[0].pointBackgroundColor[index] === 'green';
                     const status = attended ? 'Attended' : 'Not Attended';
 
-                    return `${label}: ${status} - Rating: ${value}`;
+                    return `${status} - Rating: ${value}`;
                   },
                 },
               },

@@ -7,6 +7,7 @@ import { Student, Filters } from '@/lib/types';
 import { createClient } from '@/lib/supabase/client';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { ThreeDots } from 'react-loader-spinner';
 
 const LineChart = dynamic(() => import('./Chart'), { ssr: false });
 
@@ -144,7 +145,16 @@ const StudentsTable: React.FC = () => {
   };
 
   if (loading) {
-    return <p className="text-center text-xl font-semibold">Loading...</p>;
+    return <div className='flex justify-center justify-items-center pt-[410px]'><ThreeDots
+    visible={true}
+    height="80"
+    width="80"
+    color="#4fa94d"
+    radius="9"
+    ariaLabel="three-dots-loading"
+    wrapperStyle={{}}
+    wrapperClass=""
+    /></div>;
   }
 
   if (error) {
@@ -175,58 +185,6 @@ const StudentsTable: React.FC = () => {
         </button>
       </div>
       {showFilters && <Filter filters={filters} onFilterChange={handleFilterChange} />}
-      {/* <table className="w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden shadow-left-right">
-        <thead className="bg-gray-800 text-white">
-          <tr>
-            <th className="py-3 px-4">Rank</th>
-            <th className="py-3 px-4">Username</th>
-            <th className="py-3 px-4">Department</th>
-            <th className="py-3 px-4">Section</th>
-            <th className="py-3 px-4">Year</th>
-            <th className="py-3 px-4">No. of Questions</th>
-            <th className="py-3 px-4">Question ID</th>
-            <th className="py-3 px-4">Finish Time</th>
-            <th className="py-3 px-4">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredStudents.length > 0 ? (
-            currentStudents.map((student, index) => (
-              <React.Fragment key={index}>
-                <tr
-                  className={`cursor-pointer text-center hover:bg-gray-200 transition-colors duration-200 ${
-                    expandedRow === index ? 'bg-gray-100' : 'bg-white'
-                  } ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
-                  onClick={() => toggleExpandRow(index)}
-                >
-                  <td className="py-3 px-4">{student.rank}</td>
-                  <td className="py-3 px-4">{student.username}</td>
-                  <td className="py-3 px-4">{student.dept}</td>
-                  <td className="py-3 px-4">{student.section}</td>
-                  <td className="py-3 px-4">{student.year}</td>
-                  <td className="py-3 px-4">{student.no_of_questions}</td>
-                  <td className="py-3 px-4">{student.question_ids?.join(', ')}</td>
-                  <td className="py-3 px-4">{student.finish_time}</td>
-                  <td className="py-3 px-4">{student.status}</td>
-                </tr>
-                {expandedRow === index && (
-                  <tr>
-                    <td colSpan={9} className="bg-gray-100 p-4">
-                      <LineChart username={student.leetcode_id} />
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={9} className="text-center py-4">
-                No students match the current filters.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table> */}
      <table className="w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden shadow-left-right">
   <thead className="bg-gray-800 text-white">
     <tr>
@@ -263,7 +221,8 @@ const StudentsTable: React.FC = () => {
           </tr>
           {expandedRow === index && (
             <tr>
-              <td colSpan={9} className="bg-gray-100 p-4">
+              <td colSpan={9} className="bg-gray-100 pl-[100px]">
+                
                 <LineChart username={student.leetcode_id} />
               </td>
             </tr>

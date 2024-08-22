@@ -5,6 +5,7 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale } from 'chart.js';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
+import { ThreeDots } from 'react-loader-spinner';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale);
 
@@ -23,6 +24,7 @@ const AnalysisPage: React.FC = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<string>('All');
   const [selectedSection, setSelectedSection] = useState<string>('All');
   const [selectedContest, setSelectedContest] = useState<string>('');
+  const [loading, setLoading] = useState(true);
 
   const toTitleCase = (str: string) => {
     return str
@@ -34,14 +36,15 @@ const AnalysisPage: React.FC = () => {
 
   useEffect(() => {
     const fetchContests = async () => {
+      try {
+        setLoading(true);
       const { data: contestsData, error } = await supabase
         .from('contests')
         .select('contest_name')
         .order('created_at', { ascending: false });  // Ensure 'created_at' is in your table
 
       if (error) {
-        console.error('Error fetching contests:', error);
-        return;
+        throw error;
       }
 
       const contestNames = contestsData.map(contest => contest.contest_name);
@@ -49,9 +52,16 @@ const AnalysisPage: React.FC = () => {
       if (contestNames.length > 0) {
         setSelectedContest(contestNames[0]);  // Set the default contest to the most recent one
       }
+      } catch (error) {
+        console.error('Error fetching contests:', error);
+        return;
+      }finally {
+        setLoading(false);
+      }
     };
 
     fetchContests();
+    
   }, []);
 
   useEffect(() => {
@@ -78,6 +88,8 @@ const AnalysisPage: React.FC = () => {
 
     fetchData();
   }, [selectedContest]);
+
+  
 
   useEffect(() => {
     const filtered = data.filter(item => {
@@ -125,9 +137,22 @@ const AnalysisPage: React.FC = () => {
       },
     ],
   };
+  if (loading) {
+    return <div className='flex justify-items-center justify-center pt-[400px]'> <ThreeDots
+      visible={true}
+      height="80"
+      width="80"
+      color="#4fa94d"
+      radius="9"
+      ariaLabel="three-dots-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+      />
+    </div>;
+  }
 
   return (
-    <div className="pb-6">
+    <div className="pb-6 px-10">
       <div className="text-2xl mb-4">
         <h1 className="text-5xl font-bold mb-6 text-center pt-5">{toTitleCase(selectedContest.replace(/_/g, ' '))}</h1>
 
@@ -194,8 +219,8 @@ const AnalysisPage: React.FC = () => {
               id="section"
               value={selectedSection}
               onChange={(e) => setSelectedSection(e.target.value)}
-              className="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            >
+              className="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            
               {sections.map(section => (
                 <option key={section} value={section}>{section}</option>
               ))}
@@ -203,7 +228,6 @@ const AnalysisPage: React.FC = () => {
           </div>
         </div>
       </div>
-
       <div className="flex justify-center">
         {filteredData.length > 0 ? (
           <div className="w-full max-w-xl">
@@ -215,13 +239,12 @@ const AnalysisPage: React.FC = () => {
       </div>
       <div className="flex justify-center pt-[60px]">
         <Link href="/">
-          <button className="px-8 py-4 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 ease-in-out">
-            Back to Home
+          <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-800 text-white hover:bg-gray-500">
+          Back to Home
           </button>
         </Link>
       </div>
     </div>
   );
 };
-
 export default AnalysisPage;
