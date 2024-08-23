@@ -39,7 +39,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ filters, onFilterChan
       {["status", "college", "year", "dept", "section", "no_of_questions"].map((filter) => (
         <select
           key={filter}
-          className="border border-gray-300 rounded-lg p-2 text-lg bg-white shadow-md focus:outline-none focus:ring focus:border-blue-300"
+          className="border border-gray-300 rounded-lg p-2 text-lg bg-white shadow-md focus:outline-none focus:ring focus:border-blue-300 shadow-black"
           name={filter}
           onChange={onFilterChange}
           defaultValue=""
