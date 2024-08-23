@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { ThreeDots } from 'react-loader-spinner';
 
 const LineChart = dynamic(() => import('./Chart'), { ssr: false });
+const DoughnutChart= dynamic(() => import('./CountChart'), { ssr: false });
 
 const StudentsTable: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
@@ -170,7 +171,7 @@ const StudentsTable: React.FC = () => {
     <div className="px-10">
       <div className="flex justify-center my-6">
         <select
-          className="border border-gray-300 rounded-lg p-2 text-lg bg-white shadow-md focus:outline-none focus:ring focus:border-blue-300"
+          className="border border-gray-300 rounded-lg p-2 text-lg bg-white shadow-md shadow-black focus:outline-none focus:ring focus:border-blue-300"
           onChange={handleContestChange}
           value={selectedContest}
         >
@@ -183,7 +184,7 @@ const StudentsTable: React.FC = () => {
       </div>
       <h2 className="text-center text-5xl font-bold mb-6">{toTitleCase(selectedContest.replace(/_/g, ' '))}</h2>
       <div className="flex justify-center mb-10">
-        <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-100 hover:bg-gray-200"
+        <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-100 hover:bg-gray-200 shadow-black"
           onClick={toggleFilters}
         >
           Filter
@@ -228,8 +229,12 @@ const StudentsTable: React.FC = () => {
           {expandedRow === index && (
             <tr>
               <td colSpan={9} className="bg-gray-100">
-                
-                <LineChart username={student.leetcode_id} />
+                <div className='flex justify-center'>
+                  <div className='flex flex-row justify-center'>
+                    <LineChart username={student.leetcode_id} />
+                    <DoughnutChart username={student.leetcode_id} />
+                  </div>
+                </div>
               </td>
             </tr>
           )}

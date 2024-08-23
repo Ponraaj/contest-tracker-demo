@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -34,7 +33,7 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                 data: lastFourContests.map((contest: any) => contest?.rating || 0),
                 fill: false,
                 borderColor: 'green',
-                backgroundColor:'rgba(0, 0, 0, 0.5)',
+                backgroundColor: 'black',
                 pointHoverRadius: 8,
                 tension: 0.1,
                 pointBackgroundColor: lastFourContests.map((contest: any) =>
@@ -62,17 +61,20 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
   }, [username]);
 
   if (loading) {
-    return <div className='flex justify-items-center justify-center'> <ThreeDots
-      visible={true}
-      height="80"
-      width="80"
-      color="#4fa94d"
-      radius="9"
-      ariaLabel="three-dots-loading"
-      wrapperStyle={{}}
-      wrapperClass=""
-      />
-    </div>;
+    return (
+      <div className='flex justify-items-center justify-center'>
+        <ThreeDots
+          visible={true}
+          height="80"
+          width="80"
+          color="#4fa94d"
+          radius="9"
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      </div>
+    );
   }
 
   if (!chartData || chartData.labels.length === 0) {
@@ -80,11 +82,10 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
   }
 
   return (
-    <div className="container flex justify-center items-center">
+    <div className="flex justify-center items-center pr-[20px]">
       <div className='w-[700px] bg-white rounded-lg shadow-lg pt-[20px]'>
-      <p className='font-semibold'>Previous 5 contest rankings</p>
+        <p className='font-semibold'>Previous 5 contest rankings</p>
         <Line
-          className='bg-'
           data={chartData}
           options={{
             plugins: {
@@ -92,9 +93,9 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                 display: false, // Disable the legend to remove the label box
               },
               tooltip: {
+                enabled: true, // Enable tooltips on hover
                 callbacks: {
                   label: (context) => {
-                    const label = context.dataset.label || '';
                     const value = context.raw;
                     const index = context.dataIndex;
                     const attended = chartData.datasets[0].pointBackgroundColor[index] === 'green';
@@ -103,6 +104,13 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                     return `${status} - Rating: ${value}`;
                   },
                 },
+              },
+              datalabels: {
+                color: '#000',
+                font: {
+                  size: 1,
+                },
+                formatter: (value: number) => value,
               },
             },
             elements: {
@@ -118,6 +126,10 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                 },
                 hoverBorderWidth: 2,
               },
+            },
+            interaction: {
+              mode: 'nearest', // Only show tooltip on hover
+              intersect: true,
             },
           }}
         />
