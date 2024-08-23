@@ -34,6 +34,8 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                 data: lastFourContests.map((contest: any) => contest?.rating || 0),
                 fill: false,
                 borderColor: 'green',
+                backgroundColor:'rgba(0, 0, 0, 0.5)',
+                pointHoverRadius: 8,
                 tension: 0.1,
                 pointBackgroundColor: lastFourContests.map((contest: any) =>
                   contest?.attended ? 'green' : 'red'
@@ -60,7 +62,7 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
   }, [username]);
 
   if (loading) {
-    return <div className='pl-[800px]'> <ThreeDots
+    return <div className='flex justify-items-center justify-center'> <ThreeDots
       visible={true}
       height="80"
       width="80"
@@ -79,9 +81,10 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
 
   return (
     <div className="container flex justify-center items-center">
-      <div className='w-[700px] pl-[100px]'>
-      <p className='pl-[150px] '>Previous 5 contest rankings</p>
+      <div className='w-[700px] bg-white rounded-lg shadow-lg pt-[20px]'>
+      <p className='font-semibold'>Previous 5 contest rankings</p>
         <Line
+          className='bg-'
           data={chartData}
           options={{
             plugins: {

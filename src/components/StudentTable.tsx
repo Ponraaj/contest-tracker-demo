@@ -167,7 +167,7 @@ const StudentsTable: React.FC = () => {
   }
 
   return (
-    <div className="px-4">
+    <div className="px-10">
       <div className="flex justify-center my-6">
         <select
           className="border border-gray-300 rounded-lg p-2 text-lg bg-white shadow-md focus:outline-none focus:ring focus:border-blue-300"
@@ -210,7 +210,7 @@ const StudentsTable: React.FC = () => {
       currentStudents.map((student, index) => (
         <React.Fragment key={index}>
           <tr
-            className={`cursor-pointer text-center transform transition-transform duration-200 hover:scale-x-105 hover:shadow-lg hover:border-solid hover:bg-yellow-50 ${
+            className={`cursor-pointer text-center transform transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg hover:border-solid hover:bg-gray-300 ${
               expandedRow === index ? 'bg-gray-100' : 'bg-white'
             } ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
             onClick={() => toggleExpandRow(index)}
@@ -227,7 +227,7 @@ const StudentsTable: React.FC = () => {
           </tr>
           {expandedRow === index && (
             <tr>
-              <td colSpan={9} className="bg-gray-100 pl-[100px]">
+              <td colSpan={9} className="bg-gray-100">
                 
                 <LineChart username={student.leetcode_id} />
               </td>
