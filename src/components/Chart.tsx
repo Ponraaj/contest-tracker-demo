@@ -29,11 +29,12 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
             labels: lastFourContests.map((contest: any) => contest?.contest?.title || 'N/A'),
             datasets: [
               {
-                label: '',  // Set the label to an empty string
+                label: 'Attended',  // Set the label to an empty string
                 data: lastFourContests.map((contest: any) => contest?.rating || 0),
                 fill: false,
+                borderWidth:2,
                 borderColor: 'green',
-                backgroundColor: 'black',
+                backgroundColor: 'green',
                 pointHoverRadius: 8,
                 tension: 0.1,
                 pointBackgroundColor: lastFourContests.map((contest: any) =>
@@ -44,6 +45,12 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                 ),
                 pointRadius: 8,
               },
+              {
+                label:'Not Attended',
+                borderWidth: '2',
+                borderColor: 'red',
+                backgroundColor: 'red',
+              }
             ],
           });
         } else {
@@ -83,13 +90,20 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
 
   return (
     <div className="flex justify-center items-center pr-[20px]">
-      <div className='w-[700px] bg-white rounded-lg shadow-lg pt-[20px]'>
+      <div className='w-[700px] bg-white rounded-lg shadow-lg p-[20px] shadow-[#566573]'>
         <p className='font-semibold'>Previous 5 contest rankings</p>
         <Line
           data={chartData}
           options={{
             plugins: {
               legend: {
+                labels: {
+                  color: '#1c2833', // Set the color for the legend labels
+                  font: {
+                    weight: 'bold',
+                    family: 'Poppins, sans-serif',
+                  }
+                },
                 display: false, // Disable the legend to remove the label box
               },
               tooltip: {
