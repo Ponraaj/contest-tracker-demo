@@ -1059,7 +1059,7 @@ const AnalysisPage: React.FC = () => {
       </div> */}
       <div className="grid grid-rows-1 md:grid-cols-2 gap-6">
               <div className="bg-gray-100 shadow-md rounded-lg p-6">
-                <div className='w-[1100px] grid justify-center'>
+                <div className='w-full grid justify-center'>
           <h2 className="text-lg font-semibold mb-2 pr-2">Question Distribution</h2>
           <Pie data={chartData.pie} options={pieOptions} />
         </div>
