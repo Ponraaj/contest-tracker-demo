@@ -108,9 +108,29 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
               datalabels: {
                 color: '#000',
                 font: {
-                  size: 1,
+                  size: 0,
                 },
                 formatter: (value: number) => value,
+              },
+            },
+            scales: {
+              x: {
+                ticks: {
+                  color: 'black',
+                  font: {
+                    weight: 'bold', // Set the font weight to semibold for x-axis labels
+                    family: 'Poppins, sans-serif', // Use Poppins font
+                  },
+                },
+              },
+              y: {
+                ticks: {
+                  color: 'black',
+                  font: {
+                    weight: 'bold', // Set the font weight to semibold for y-axis labels
+                    family: 'Poppins, sans-serif', // Use Poppins font
+                  },
+                },
               },
             },
             elements: {
