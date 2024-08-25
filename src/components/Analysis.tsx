@@ -214,7 +214,7 @@ const AnalysisPage: React.FC = () => {
         },
         font: {
           weight: 'bold',
-          size: 12,
+          size: 20,
           family: 'Poppins',
         },
       },
@@ -247,36 +247,43 @@ const AnalysisPage: React.FC = () => {
           </div>
         ) : (
           <>
-            <div className="mb-6 flex flex-col items-center justify-center space-y-4">
-              <div className="flex flex-wrap gap-4 justify-center">
-              <label htmlFor="college" className="block text-lg font-medium text-gray-700 mb-2">Select College:</label>
-                <select value={selectedCollege} onChange={(e) => setSelectedCollege(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 bg-white shadow-sm hover:shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <div className="mb-6 pt-4 gap-3 grid grid-cols-3 w-full">
+              {/* <div className="flex flex-wrap gap-4 justify-center"> */}
+              <div>
+              <label htmlFor="college" className="block text-lg font-semibold text-gray-700 mb-2">Select College:</label>
+                <select value={selectedCollege} onChange={(e) => setSelectedCollege(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 w-full bg-white shadow-sm hover:shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                   {colleges.map((college) => (
                     <option key={college} value={college}>
                       {toTitleCase(college)}
                     </option>
                   ))}
                 </select>
-                <label htmlFor="year" className="block text-lg font-medium text-gray-700 mb-2">Select Year:</label>
+                </div>
+                <div>
+                <label htmlFor="year" className="block text-lg  font-semibold text-gray-700 mb-2">Select Year:</label>
 
-                <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 bg-white shadow-sm hover:shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 bg-white w-full shadow-sm hover:shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                   {years.map((year) => (
                     <option key={year} value={year}>
                       {year}
                     </option>
                   ))}
                 </select>
-                <label htmlFor="department" className="block text-lg font-medium text-gray-700 mb-2">Select Department:</label>
-                <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 bg-white shadow-sm hover:shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                </div>
+                <div>
+                <label htmlFor="department" className="block text-lg font-semibold text-gray-700 mb-2">Select Department:</label>
+                <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 w-full bg-white shadow-sm hover:shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                   {departments.map((dept) => (
                     <option key={dept} value={dept}>
                       {toTitleCase(dept)}
                     </option>
                   ))}
                 </select>
-                <label htmlFor="section" className="block text-lg font-medium text-gray-700 mb-2">Select Section:</label>
+                </div>
+                <div>
+                <label htmlFor="section" className="block text-lg font-semibold text-gray-700 mb-2">Select Section:</label>
 
-                <select value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 bg-white shadow-sm hover:shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <select value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 w-full bg-white shadow-sm hover:shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                   {sections.map((section) => (
                     <option key={section} value={section}>
                       {toTitleCase(section)}
@@ -284,21 +291,25 @@ const AnalysisPage: React.FC = () => {
                   ))}
                 </select>
               </div>
-              <label htmlFor="contest" className="block text-lg font-medium text-gray-700 mb-2">Select Contest:</label>
+              <div>
+              <label htmlFor="contest" className="block text-lg font-semibold text-gray-700 mb-2">Select Contest:</label>
 
-              <select value={selectedContest} onChange={(e) => setSelectedContest(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 bg-white shadow-sm hover:shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <select value={selectedContest} onChange={(e) => setSelectedContest(e.target.value)} className="border border-gray-300 rounded-md px-4 py-2 w-full bg-white shadow-sm hover:shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 {contests.map((contest) => (
                   <option key={contest} value={contest}>
                     {toTitleCase(contest.replace(/_/g, ' '))}
                   </option>
                 ))}
               </select>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white shadow-md rounded-lg p-6">
-                <h2 className="text-lg font-bold mb-4 text-center">Participation Summary</h2>
-                <Pie data={chartData.pie} options={pieOptions} />
+            <div className="grid grid-rows-1 gap-6">
+              <div className='bg-white shadow-md rounded-lg p-6 flex justify-center'>
+              <div className= " w-[1000px] ">
+                <h2 className="text-lg  font-bold mb-4 text-center">Participation Summary</h2>
+                <Pie className='w-[300px]' data={chartData.pie} options={pieOptions} />
+              </div>
               </div>
               <div className="bg-white shadow-md rounded-lg p-6">
                 <h2 className="text-lg font-bold mb-4 text-center">Contest Trend</h2>
