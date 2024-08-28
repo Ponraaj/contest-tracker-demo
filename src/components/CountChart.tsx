@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
 import 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import getLeetCodeUserDetails from '@/lib/leetcode/index';
@@ -8,7 +7,6 @@ import { ThreeDots } from 'react-loader-spinner';
 import { Doughnut } from 'react-chartjs-2';
 import "../app/globals.css";
 import { ChartArea, ChartDataset, Chart as ChartJS } from 'chart.js';
-import { color } from 'chart.js/helpers';
 
 ChartJS.register(ChartDataLabels);
 
@@ -17,11 +15,11 @@ const hoverCenterTextChange = {
   beforeDraw: (chart: { ctx: CanvasRenderingContext2D; chartArea: ChartArea; config: any; }) => {
     const { ctx, chartArea, config } = chart;
     const { centerText } = config.options.plugins;
-    
+
     if (centerText?.display) {
       const active = (chart as any).getActiveElements();
       const hoveredElement = active.length > 0 ? active[0] : null;
-      
+
       let text = centerText.text;
       let color = centerText.color;
       if (hoveredElement) {
@@ -32,7 +30,7 @@ const hoverCenterTextChange = {
         color = index === 0 ? '#229954' : (index === 1 ? '#9a7d0a' : '#C70039');
         text = `${difficulty}: ${value}`;
       }
-      
+
       const centerX = (chartArea.left + chartArea.right) / 2;
       const centerY = (chartArea.top + chartArea.bottom) / 2;
       ctx.save();
@@ -44,7 +42,8 @@ const hoverCenterTextChange = {
       ctx.fillText(text, centerX, centerY);
       ctx.restore();
     }
-  },};
+  },
+};
 
 ChartJS.register(ChartDataLabels, hoverCenterTextChange);
 
@@ -65,7 +64,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ username }) => {
         if (data && data.problemsSolved.length > 0) {
           const difficulties = ['Easy', 'Medium', 'Hard'];
           const colors = ['#229954', '#FAC624', '#C70039'];
-          
+
           const filteredData = difficulties
             .map((difficulty, index) => {
               const problemData = data.problemsSolved.find((item: any) => item.difficulty === difficulty);
