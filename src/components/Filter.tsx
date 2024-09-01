@@ -64,6 +64,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ filters, onFilterChan
             <>
               <option value="2">2nd Year</option>
               <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
             </>
           )}
           {filter === "dept" && (

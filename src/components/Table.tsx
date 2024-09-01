@@ -1,6 +1,5 @@
 //Table.jsx
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import Filter from './Filter';
 import Pagination from './Pagination';
@@ -9,16 +8,13 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ThreeDots } from 'react-loader-spinner';
 import { createClient } from '@/lib/supabase/client';
-
 const LineChart = dynamic(() => import('./Chart'), { ssr: false });
 const DoughnutChart = dynamic(() => import('./CountChart'), { ssr: false });
-
 interface TableProps {
   initialContests: string[];
   initialStudents: Student[];
   initialContest: string;
 }
-
 export default function Table({ initialContests, initialStudents, initialContest }: TableProps) {
   const [students, setStudents] = useState<Student[]>(initialStudents);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>(initialStudents);
