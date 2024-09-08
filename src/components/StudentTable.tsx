@@ -2,7 +2,7 @@
 import { createClient } from "@/lib/supabase/client";
 import Table from "./Table";
 import { Student } from "@/lib/types";
-// export const revalidate = 30;
+export const revalidate = 30;
 async function getContests() {
   const supabase = createClient();
   const { data, error } = await supabase
