@@ -1,4 +1,3 @@
-//Table.jsx
 'use client';
 import React, { useState, useEffect } from 'react';
 import Filter from './Filter';
@@ -8,13 +7,16 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ThreeDots } from 'react-loader-spinner';
 import { createClient } from '@/lib/supabase/client';
+
 const LineChart = dynamic(() => import('./Chart'), { ssr: false });
 const DoughnutChart = dynamic(() => import('./CountChart'), { ssr: false });
+
 interface TableProps {
   initialContests: string[];
   initialStudents: Student[];
   initialContest: string;
 }
+
 export default function Table({ initialContests, initialStudents, initialContest }: TableProps) {
   const [students, setStudents] = useState<Student[]>(initialStudents);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>(initialStudents);
@@ -26,6 +28,7 @@ export default function Table({ initialContests, initialStudents, initialContest
     year: null,
     college: null,
   });
+  const [searchQuery, setSearchQuery] = useState(''); // Added search state
   const [showFilters, setShowFilters] = useState(false);
   const [contests, setContests] = useState<string[]>(initialContests);
   const [selectedContest, setSelectedContest] = useState<string>(initialContest);
@@ -84,6 +87,13 @@ export default function Table({ initialContests, initialStudents, initialContest
   useEffect(() => {
     let filtered = students;
 
+    // Filter by the search query (name)
+    if (searchQuery) {
+      filtered = filtered.filter((student) =>
+        student.username.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
     if (filters.no_of_questions !== null) {
       filtered = filtered.filter((student) => student.no_of_questions === filters.no_of_questions!);
     }
@@ -110,7 +120,7 @@ export default function Table({ initialContests, initialStudents, initialContest
 
     setFilteredStudents(filtered);
     setCurrentPage(1);
-  }, [filters, students]);
+  }, [filters, students, searchQuery]);
 
   const toggleFilters = () => {
     setShowFilters((prev) => !prev);
@@ -145,7 +155,9 @@ export default function Table({ initialContests, initialStudents, initialContest
           ))}
         </select>
       </div>
+
       <h2 className="text-center text-5xl font-bold mb-6">{toTitleCase(selectedContest.replace(/_/g, ' '))}</h2>
+
       <div className="flex justify-center mb-10">
         <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-100 hover:bg-gray-200"
           onClick={toggleFilters}
@@ -153,7 +165,33 @@ export default function Table({ initialContests, initialStudents, initialContest
           Filter
         </button>
       </div>
+
+      {/* Search Bar */}
+      <div className="flex justify-center mb-10">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search by name..."
+            className="pl-10 pr-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+            viewBox="0 0 16 16"
+          >
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+          </svg>
+        </div>
+      </div>
+
+
       {showFilters && <Filter filters={filters} onFilterChange={handleFilterChange} />}
+
       <table className="w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden shadow-left-right">
         <thead className="bg-gray-800 text-white">
           <tr>
@@ -210,9 +248,11 @@ export default function Table({ initialContests, initialStudents, initialContest
           )}
         </tbody>
       </table>
+
       {filteredStudents.length > 0 && (
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       )}
+
       <div className="flex justify-center my-6">
         <Link href="/analytics">
           <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-800 text-white hover:bg-gray-500">
