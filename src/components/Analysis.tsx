@@ -6,7 +6,7 @@ import DataFetcher from './DataFetcher';
 import PieChart from './PieChart';
 import BarChart from './BarChart'; // Import the BarChart component
 import LineChart from './LineChart';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import { ThreeDots } from 'react-loader-spinner';
 
 const AnalysisPage: React.FC = () => {
@@ -98,16 +98,36 @@ const AnalysisPage: React.FC = () => {
     ],
   };
   const previousContests = Object.keys(data.contestDataMap).filter(contest => contest !== selectedContest);
-  const allContests = [selectedContest, ...previousContests.slice(-4)];
+  const allContests = [selectedContest, ...previousContests]; // Keep the selected contest first and include all previous contests
+  console.log(allContests);
 
+
+  const applyFilters = (contestData: any[]) => {
+    let filteredContestData = contestData;
+    if (selectedFilter.college) {
+      filteredContestData = filteredContestData.filter(item => item.college === selectedFilter.college);
+    }
+    if (selectedFilter.year) {
+      filteredContestData = filteredContestData.filter(item => item.year === selectedFilter.year);
+    }
+    if (selectedFilter.dept) {
+      filteredContestData = filteredContestData.filter(item => item.dept === selectedFilter.dept);
+    }
+    if (selectedFilter.section) {
+      filteredContestData = filteredContestData.filter(item => item.section === selectedFilter.section);
+    }
+    return filteredContestData;
+  };
+  
   const attendingData = allContests.map(contest => {
-    const contestData = data.contestDataMap[contest] || [];
+    const contestData = applyFilters(data.contestDataMap[contest] || []); // Apply filters
     const totalStudents = contestData.length;
     const notAttended = contestData.filter(item => item.no_of_questions === null).length;
     return totalStudents > 0 ? ((totalStudents - notAttended) / totalStudents) * 100 : 0;
   });
+  
   const lineChartData = {
-    labels: allContests,
+    labels: allContests.slice(0,5),
     datasets: [
       {
         label: 'Attending Percentage',
