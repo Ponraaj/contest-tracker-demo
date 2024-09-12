@@ -9,6 +9,14 @@ import LineChart from './LineChart';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import { ThreeDots } from 'react-loader-spinner';
 
+const toTitleCase = (str: string) => {
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
 const AnalysisPage: React.FC = () => {
   const [data, setData] = useState<any>({ filterData: [], contestDataMap: {} });
   const [contests, setContests] = useState<string[]>([]);
@@ -97,9 +105,8 @@ const AnalysisPage: React.FC = () => {
       },
     ],
   };
-  const previousContests = Object.keys(data.contestDataMap).filter(contest => contest !== selectedContest);
-  const allContests = [selectedContest, ...previousContests]; // Keep the selected contest first and include all previous contests
-  console.log(allContests);
+  const previousContests = Object.keys(data.contestDataMap);
+  const allContests = [...previousContests].reverse(); // Keep the selected contest first and include all previous contests
 
 
   const applyFilters = (contestData: any[]) => {
@@ -127,7 +134,7 @@ const AnalysisPage: React.FC = () => {
   });
   
   const lineChartData = {
-    labels: allContests.slice(0,5),
+    labels: allContests.slice(-5).map(contest => toTitleCase(contest.replace(/_/g, ' '))),
     datasets: [
       {
         label: 'Attending Percentage',
@@ -135,7 +142,7 @@ const AnalysisPage: React.FC = () => {
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgb(75, 192, 192)',
         borderWidth: 2,
-        fill: true,
+        fill: false,
         pointBackgroundColor: 'rgb(75, 192, 192)',
       },
     ],
@@ -164,23 +171,7 @@ const AnalysisPage: React.FC = () => {
         <>
           <div className="flex flex-col md:flex-row md:justify-between mb-4">
             <h2 className="text-lg font-semibold">Analysis of Contest Data</h2>
-            <div>
-              <label htmlFor="contest-select" className="block text-sm font-medium text-gray-700">Select Contest</label>
-              <select
-                id="contest-select"
-                value={selectedContest}
-                onChange={(e) => {
-                  setSelectedContest(e.target.value);
-                }}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              >
-                {contests.map(contest => (
-                  <option key={contest} value={contest}>
-                    {contest}
-                  </option>
-                ))}
-              </select>
-            </div>
+            
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
@@ -248,6 +239,23 @@ const AnalysisPage: React.FC = () => {
               </select>
             </div>
           </div>
+          <div>
+              <label htmlFor="contest-select" className="block text-sm font-medium text-gray-700">Select Contest</label>
+              <select
+                id="contest-select"
+                value={selectedContest}
+                onChange={(e) => {
+                  setSelectedContest(e.target.value);
+                }}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+              >
+                {contests.map(contest => (
+                  <option key={contest} value={contest}>
+                    {toTitleCase(contest.replace(/_/g, ' '))} 
+                  </option>
+                ))}
+              </select>
+            </div>
           <div className="flex items-center mb-6">
             <span className="mr-3 text-gray-700">{showPieChart ? 'Switch to Bar Chart' : 'Switch to Pie Chart'}</span>
             <label htmlFor="toggleSwitch" className="relative inline-flex items-center cursor-pointer">
