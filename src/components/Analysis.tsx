@@ -3,12 +3,16 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import DataFetcher from './DataFetcher';
+import { Chart, registerables } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import PieChart from './PieChart';
 import BarChart from './BarChart'; // Import the BarChart component
 import LineChart from './LineChart';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import { ThreeDots } from 'react-loader-spinner';
+import { Bar } from 'react-chartjs-2';
 
+import { ThreeDots } from 'react-loader-spinner';
+Chart.register(...registerables, ChartDataLabels);
 const toTitleCase = (str: string) => {
   return str
     .toLowerCase()
@@ -80,6 +84,87 @@ const AnalysisPage: React.FC = () => {
       },
     ],
   };
+
+const sectionCounts = filters.sections.reduce((acc: any, section: string) => {
+  // Filter the data to include only students who have attended at least one question
+  const attendedCount = filteredData.filter(item => 
+    item.section === section && item.no_of_questions !== null
+  ).length;
+
+
+  acc[section] = attendedCount; // Store the count of attendees for the section
+  return acc;
+}, {});
+
+// const yearCounts = filters.year.reduce((acc: any, year: string) => {
+//   // Sum the number of questions for the current year
+//   const totalQuestions = filteredData
+//     .filter(item => item.year === year && item.no_of_questions !== null)
+//     .reduce((sum, item) => sum + item.no_of_questions, 0);
+
+//   // Store the result in the accumulator object
+//   acc[year] = totalQuestions;
+
+//   return acc;
+// }, {});
+
+// const labels = Object.keys(yearCounts);
+// const dataValues = Object.values(yearCounts);
+
+// // Example data for multi-line chart
+// const chartData = {
+//   labels: labels, // Years on x-axis
+//   datasets: [
+//     {
+//       label: 'Number of Questions',
+//       data: dataValues,
+//       borderColor: 'rgba(75, 192, 192, 1)',
+//       backgroundColor: 'rgba(75, 192, 192, 0.2)',
+//       fill: false,
+//     }
+//   ]
+// };
+
+
+const sectionBarChartData = {
+  labels: Object.keys(sectionCounts), // X-axis labels (section names)
+  datasets: [
+    {
+      label: 'Attended Count', // Y-axis label
+      data: Object.values(sectionCounts), // Y-axis data (counts)
+      backgroundColor: 'rgb(162, 162, 162)', // Bar color
+      borderColor: 'rgba(153, 102, 255, 1)', // Border color
+      borderWidth: 1, // Border width
+    },
+  ],
+};
+const chartOptions = {
+  maintainAspectRatio: false, // Disable aspect ratio for custom height
+  responsive: true,           // Make chart responsive
+  scales: {
+    x: {
+      ticks: {
+        color: 'black', // X-axis label color
+      },
+    },
+    y: {
+      beginAtZero: true, // Ensure Y-axis starts at 0
+      ticks: {
+        stepSize: 1,    // Increment of 1 on Y-axis
+        color: 'black', // Y-axis label color
+      },
+    },
+  },
+  plugins: {
+    datalabels: {
+      color: 'black',  // Set the data label color to black
+      anchor: 'center',   // Position the labels inside the bars
+      align: 'top',    // Align the labels at the top of the bars
+    },
+  },
+};
+
+
   const barChartData = {
     labels: ['Not Attended', '0 solved', '1 solved', '2 solved', '3 solved', '4 solved'],
     datasets: [
@@ -147,6 +232,9 @@ const AnalysisPage: React.FC = () => {
       },
     ],
   };
+  
+  
+  
   return (
     <div className="p-4 space-y-4">
       <DataFetcher
@@ -276,6 +364,9 @@ const AnalysisPage: React.FC = () => {
             {showPieChart ? <PieChart data={pieChartData} /> : <BarChart data={barChartData} />}
             <LineChart data={lineChartData} />
           </div>
+          <div className="w-full h-[500px] mt-4">
+          <Bar data={sectionBarChartData} options={chartOptions} />
+          </div>;
           <div className="flex justify-center my-6 pt-8">
             <Link href="/">
               <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-800 text-white hover:bg-gray-500">
