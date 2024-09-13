@@ -19,6 +19,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
     "react-loader-spinner": "^6.1.6",
+    "supabase": "^1.192.5",
     "tailwind": "^4.0.0"
   },
   "devDependencies": {
