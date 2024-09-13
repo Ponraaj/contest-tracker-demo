@@ -36,12 +36,16 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
     layout: {
       padding: 20,  // Increase padding to avoid label collisions
     },
+    maintainAspectRatio: false, // Disable default aspect ratio
+    aspectRatio: 2,             // Set custom aspect ratio
   };
 
   return (
-    <div className='w-full grid justify-center bg-gray-100 shadow-md rounded-lg p-4'>
-      <h2 className="text-lg font-semibold mb-2 pr-2">Question Distribution</h2>
-      <Pie data={data} options={pieOptions} />
+    <div className='w-full grid justify-center bg-gray-100 shadow-md rounded-lg p-6 pb-[-1.5rem]'>
+      <h2 className="text-lg font-bold mb-4 text-center">Question Distribution</h2>
+      <div className='h-full w-[800px]'> {/* Adjust height to match line chart */}
+        <Pie data={data} options={pieOptions} />
+      </div>
     </div>
   );
 };
