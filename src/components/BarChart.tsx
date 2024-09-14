@@ -78,7 +78,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="w-full bg-gray-100 shadow-md rounded-lg p-4">
+    <div className="w-full h-full bg-gray-100 shadow-md rounded-lg p-4">
       <Bar data={data} options={barOptions} />
     </div>
   );

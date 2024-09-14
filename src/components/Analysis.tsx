@@ -1,7 +1,7 @@
 //Analysis.tsx
 
 "use client";
-
+import { Bar } from 'react-chartjs-2';
 import React, { useState, useEffect } from 'react';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -148,6 +148,58 @@ const AnalysisPage: React.FC = () => {
       },
     ],
   };
+  const sectionCounts = filters.sections.reduce((acc: any, section: string) => {
+    // Filter the data to include only students who have attended at least one question
+    const attendedCount = filteredData.filter(item => 
+      item.section === section && item.no_of_questions !== null
+    ).length;
+  
+  
+    acc[section] = attendedCount; // Store the count of attendees for the section
+    return acc;
+  }, {});
+  const sectionBarChartData = {
+    labels: Object.keys(sectionCounts), // X-axis labels (section names)
+    datasets: [
+      {
+        label: 'Attended Count', // Y-axis label
+        data: Object.values(sectionCounts), // Y-axis data (counts)
+        backgroundColor: 'rgb(162, 162, 162)', // Bar color
+        borderColor: 'rgba(153, 102, 255, 1)', // Border color
+        borderWidth: 1, // Border width
+        barThickness:100,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    maintainAspectRatio: false, // Disable aspect ratio for custom height
+    responsive: true,           // Make chart responsive
+    scales: {
+      x: {
+        // barPercentage: 0.5,      // Adjust the width of the bars (0.0 - 1.0)
+        // categoryPercentage: 0.5, // Adjust the space between the bars (0.0 - 1.0)
+        ticks: {
+          color: 'black',        // X-axis label color
+        },
+      },
+      y: {
+        beginAtZero: true,       // Ensure Y-axis starts at 0
+        ticks: {
+          stepSize: 10,           // Increment of 1 on Y-axis
+          color: 'black',        // Y-axis label color
+        },
+      },
+    },
+    plugins: {
+      datalabels: {
+        color: 'black',          // Set the data label color to black
+        anchor: 'center',        // Position the labels inside the bars
+        align: 'top',            // Align the labels at the top of the bars
+      },
+    },
+  };
+// Calculate the yearly data
 
   // Bar Chart Data
   const barChartData = {
@@ -218,6 +270,8 @@ const AnalysisPage: React.FC = () => {
       },
     ],
   };
+
+  
 
   return (
     <div className='p-4'>
@@ -334,18 +388,27 @@ const AnalysisPage: React.FC = () => {
             {showPieChart ? <PieChart data={pieChartData} /> : <BarChart data={barChartData} />}
             <LineChart data={lineChartData} />
           </div>
-
-          <div className="flex justify-center my-6 pt-8">
-            <Link href="/">
-              <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-800 text-white hover:bg-gray-500">
-                Go to Home
-              </button>
-            </Link>
+          <div className="w-[1000px] h-[500px] mt-4">
+            <Bar data={sectionBarChartData} options={chartOptions} />
           </div>
+          
         </>
       )}
     </div>
   );
-};
-
+}
 export default AnalysisPage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
