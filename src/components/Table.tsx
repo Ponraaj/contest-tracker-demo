@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Filter from './Filter';
 import Pagination from './Pagination';
-import { Student, Filters } from '@/lib/types';
+import { Student, Filters, FilterOptions } from '@/lib/types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ThreeDots } from 'react-loader-spinner';
@@ -28,7 +28,15 @@ export default function Table({ initialContests, initialStudents, initialContest
     year: null,
     college: null,
   });
-  const [searchQuery, setSearchQuery] = useState(''); // Added search state
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>({
+    no_of_questions: [],
+    status: [],
+    dept: [],
+    section: [],
+    year: [],
+    college: []
+  });
+  const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [contests, setContests] = useState<string[]>(initialContests);
   const [selectedContest, setSelectedContest] = useState<string>(initialContest);
@@ -61,6 +69,33 @@ export default function Table({ initialContests, initialStudents, initialContest
     }));
   };
 
+  const fetchFilterOptions = async (contestName: string) => {
+    const supabase = createClient();
+    try {
+      const { data, error } = await supabase
+        .from(contestName)
+        .select('no_of_questions, status, dept, section, year, college');
+
+      if (error) throw error;
+
+      if (data) {
+        const options: FilterOptions = {
+          no_of_questions: [...new Set(data.map(item => item.no_of_questions))],
+          status: [...new Set(data.map(item => item.status))],
+          dept: [...new Set(data.map(item => item.dept))],
+          section: [...new Set(data.map(item => item.section))],
+          year: [...new Set(data.map(item => item.year))],
+          college: [...new Set(data.map(item => item.college))]
+        };
+
+        setFilterOptions(options);
+      }
+    } catch (error) {
+      console.error('Error fetching filter options:', error.message);
+      setError('Failed to fetch filter options');
+    }
+  };
+
   const handleContestChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newContest = event.target.value;
     setSelectedContest(newContest);
@@ -76,6 +111,9 @@ export default function Table({ initialContests, initialStudents, initialContest
       setStudents(data || []);
       setFilteredStudents(data || []);
       setCurrentPage(1);
+
+      // Fetch filter options for the new contest
+      await fetchFilterOptions(newContest);
     } catch (error) {
       console.error('Error fetching data:', error.message);
       setError('Failed to fetch data');
@@ -83,6 +121,10 @@ export default function Table({ initialContests, initialStudents, initialContest
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchFilterOptions(initialContest);
+  }, [initialContest]);
 
   useEffect(() => {
     let filtered = students;
@@ -167,6 +209,14 @@ export default function Table({ initialContests, initialStudents, initialContest
         </button>
       </div>
 
+      {showFilters && (
+        <Filter 
+          filters={filters} 
+          onFilterChange={handleFilterChange} 
+          filterOptions={filterOptions}
+        />
+      )}
+
       {/* Search Bar */}
       <div className="flex justify-center mb-10">
         <div className="relative">
@@ -189,9 +239,6 @@ export default function Table({ initialContests, initialStudents, initialContest
           </svg>
         </div>
       </div>
-
-
-      {showFilters && <Filter filters={filters} onFilterChange={handleFilterChange} />}
 
       <table className="w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden shadow-left-right">
         <thead className="bg-gray-800 text-white">
