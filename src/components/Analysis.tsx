@@ -273,7 +273,7 @@ const AnalysisPage: React.FC = () => {
   
   const previousContestss = contests.slice(0, 3).reverse(); // Adjust the slicing based on your needs
 
-const colors = ['#a76b9e', '#8b8c89', '#e9a6a6']; // Add more colors as needed
+const colors = ['#a76b9e', '#e9a6a6','#8b8c89']; // Add more colors as needed
 
 const maxQuestionsPerContest = 4; // Define the maximum possible questions per contest (adjust as needed)
 
@@ -482,6 +482,13 @@ const yearlyLineChartOptions = {
             <h2 className="text-lg font-bold mb-2 text-center">Yearly Comparison</h2>
               <Line data={yearlyLineChartData} options={yearlyLineChartOptions} />
             </div>
+          </div>
+          <div className="flex justify-center my-6">
+            <Link href="/">
+              <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-800 text-white hover:bg-gray-500">
+                Go to Home
+              </button>
+            </Link>
           </div>
         </>
       )}
