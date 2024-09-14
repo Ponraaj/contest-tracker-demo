@@ -123,6 +123,7 @@ export default function Table({ initialContests, initialStudents, initialContest
   }, [filters, students, searchQuery]);
 
   const toggleFilters = () => {
+    console.log('Filter button clicked');
     setShowFilters((prev) => !prev);
   };
 

@@ -42,6 +42,7 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
 
   return (
     <div className='w-full grid justify-center bg-gray-100 shadow-md rounded-lg p-6 pb-[-1.5rem]'>
+
       <h2 className="text-lg font-bold mb-4 text-center">Question Distribution</h2>
       <div className='h-full w-[800px]'> {/* Adjust height to match line chart */}
         <Pie data={data} options={pieOptions} />

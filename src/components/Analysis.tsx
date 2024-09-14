@@ -1,7 +1,7 @@
 //Analysis.tsx
 
 "use client";
-import { Bar } from 'react-chartjs-2';
+import { Bar,Line } from 'react-chartjs-2';
 import React, { useState, useEffect } from 'react';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -270,6 +270,91 @@ const AnalysisPage: React.FC = () => {
       },
     ],
   };
+  
+  const previousContestss = contests.slice(0, 3).reverse(); // Adjust the slicing based on your needs
+
+const colors = ['#a76b9e', '#8b8c89', '#e9a6a6']; // Add more colors as needed
+
+const maxQuestionsPerContest = 4; // Define the maximum possible questions per contest (adjust as needed)
+
+const yearlyLineChartData = {
+  labels: previousContestss, // X-axis with previous three contests
+  datasets: filters.years.map((year: string, yearIndex: number) => {
+    const data = previousContestss.map((contest: string) => {
+      // Get the section data for the selected year and contest
+      const sectionData = allData[contest]?.filter((item: any) => item.year === year) || [];
+      
+      // Calculate the number of students who attended the contest
+      const totalStudents = sectionData.length;
+      // Calculate the number of students who did not provide answers
+      const notAttended = sectionData.filter(item => item.no_of_questions === null).length;
+
+      // Calculate the sum of questions answered
+      const countSum = sectionData.reduce((acc: number, item: any) => acc + (item.no_of_questions || 0), 0);
+      
+      // Calculate the total number of possible questions
+      const totalSum = (countSum / ((totalStudents - notAttended) * maxQuestionsPerContest)) * 100;
+
+      return totalSum;
+    });
+
+    return {
+      label: `Year ${year}`,
+      data,
+      fill: false,
+      borderColor: colors[yearIndex % colors.length], // Use colors array for different colors
+      tension: 0.1,
+    };
+  }),
+};
+
+const yearlyLineChartOptions = {
+  maintainAspectRatio: false,
+  responsive: true,
+  scales: {
+    x: {
+      title: {
+        display: true,
+        text: 'Contests',
+        color: 'black',
+      },
+      ticks: {
+        color: 'black',
+      },
+    },
+    y: {
+      title: {
+        display: true,
+        text: 'Percentage of Questions Solved (%)',
+        color: 'black',
+      },
+      beginAtZero: true,
+      ticks: {
+        stepSize: 10,
+        color: 'black',
+        callback: function(value) {
+          return value + '%'; // Append '%' to the y-axis labels
+        }
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      labels: {
+        color: 'black',
+      },
+    },
+    datalabels: {
+      color: '',
+      anchor: 'end',
+      align: 'top',
+      formatter: function(value) {
+        return value.toFixed(2) + '%'; // Format data labels as percentage
+      },
+    },
+  },
+};
+
 
   
 
@@ -388,10 +473,16 @@ const AnalysisPage: React.FC = () => {
             {showPieChart ? <PieChart data={pieChartData} /> : <BarChart data={barChartData} />}
             <LineChart data={lineChartData} />
           </div>
-          <div className="w-[1000px] h-[500px] mt-4">
-            <Bar data={sectionBarChartData} options={chartOptions} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-5">
+            <div className='h-[500px] bg-gray-100 rounded-lg py-10'>
+            <h2 className="text-lg font-bold mb-2 text-center">Section Comparison</h2>
+              <Bar data={sectionBarChartData} options={chartOptions} />
+            </div>
+            <div className='h-[500px] bg-gray-100 rounded-lg py-10'>
+            <h2 className="text-lg font-bold mb-2 text-center">Yearly Comparison</h2>
+              <Line data={yearlyLineChartData} options={yearlyLineChartOptions} />
+            </div>
           </div>
-          
         </>
       )}
     </div>
