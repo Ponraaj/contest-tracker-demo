@@ -1,7 +1,7 @@
 //Analysis.tsx
 
 "use client";
-import { Bar,Line } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 import React, { useState, useEffect } from 'react';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -11,6 +11,7 @@ import BarChart from './BarChart';
 import Link from 'next/link';
 import { ThreeDots } from 'react-loader-spinner';
 import { createClient } from '@/lib/supabase/client';
+import { ChevronDown, Filter } from 'lucide-react';
 
 Chart.register(...registerables, ChartDataLabels);
 
@@ -358,155 +359,112 @@ const yearlyLineChartOptions = {
 
   
 
-  return (
-    <div className='p-4'>
+return (
+  <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-6">
+    <div className="max-w-7xl mx-auto">
       {loading ? (
-        <div className='flex justify-center items-center'>
-          <ThreeDots height="100" width="100" radius="9" color="#4fa94d" ariaLabel="three-dots-loading" />
+        <div className="flex justify-center items-center h-screen">
+          <ThreeDots height="80" width="80" radius="9" color="#4F46E5" ariaLabel="three-dots-loading" />
         </div>
       ) : (
         <>
-          <div className="flex flex-col md:flex-row md:justify-between mb-4">
-            <h2 className="text-lg font-semibold">Analysis of Contest Data</h2>
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h1 className="text-3xl font-bold text-gray-800 mb-6">Analysis of Contest Data</h1>
             
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label htmlFor="college-filter" className="block text-sm font-medium text-gray-700">Select College</label>
-              <select
-                id="college-filter"
-                value={selectedFilter.college}
-                onChange={(e) => setSelectedFilter({ ...selectedFilter, college: e.target.value })}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              >
-                <option value="">All Colleges</option>
-                {filters.colleges.map(college => (
-                  <option key={college} value={college}>
-                    {college}
-                  </option>
-                ))}
-              </select>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              {['college', 'year', 'dept', 'section'].map((filterType) => (
+                <div key={filterType}>
+                  <label htmlFor={`${filterType}-filter`} className="block text-sm font-medium text-gray-700 mb-1">
+                    Select {toTitleCase(filterType)}
+                  </label>
+                  <select
+                    id={`${filterType}-filter`}
+                    value={selectedFilter[filterType]}
+                    onChange={(e) => setSelectedFilter({ ...selectedFilter, [filterType]: e.target.value })}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="">All {toTitleCase(filterType)}s</option>
+                    {filters[`${filterType}s`].map((item: string) => (
+                      <option key={item} value={item}>{item}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
             </div>
-            <div>
-              <label htmlFor="year-filter" className="block text-sm font-medium text-gray-700">Select Year</label>
-              <select
-                id="year-filter"
-                value={selectedFilter.year}
-                onChange={(e) => setSelectedFilter({ ...selectedFilter, year: e.target.value })}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              >
-                <option value="">All Years</option>
-                {filters.years.map(year => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="dept-filter" className="block text-sm font-medium text-gray-700">Select Department</label>
-              <select
-                id="dept-filter"
-                value={selectedFilter.dept}
-                onChange={(e) => setSelectedFilter({ ...selectedFilter, dept: e.target.value })}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              >
-                <option value="">All Departments</option>
-                {filters.depts.map(dept => (
-                  <option key={dept} value={dept}>
-                    {dept}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="section-filter" className="block text-sm font-medium text-gray-700">Select Section</label>
-              <select
-                id="section-filter"
-                value={selectedFilter.section}
-                onChange={(e) => setSelectedFilter({ ...selectedFilter, section: e.target.value })}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              >
-                <option value="">All Sections</option>
-                {filters.sections.map(section => (
-                  <option key={section} value={section}>
-                    {section}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div>
-              <label htmlFor="contest-select" className="block text-sm font-medium text-gray-700">Select Contest</label>
+
+            <div className="mb-6">
+              <label htmlFor="contest-select" className="block text-sm font-medium text-gray-700 mb-1">Select Contest</label>
               <select
                 id="contest-select"
                 value={selectedContest}
-                onChange={(e) => {
-                  setSelectedContest(e.target.value);
-                }}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                onChange={(e) => setSelectedContest(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
               >
                 {contests.map(contest => (
                   <option key={contest} value={contest}>
-                    {toTitleCase(contest.replace(/_/g, ' '))} 
+                    {toTitleCase(contest.replace(/_/g, ' '))}
                   </option>
                 ))}
               </select>
             </div>
-            <div className="flex items-center my-4">
-            <span className="mr-3 text-gray-700">{showPieChart ? 'Switch to Bar Chart' : 'Switch to Pie Chart'}</span>
-            <label htmlFor="toggleSwitch" className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                id="toggleSwitch"
-                className="sr-only peer"
-                checked={showPieChart}
-                onChange={() => setShowPieChart(!showPieChart)}
-              />
-              <div className="w-11 h-6 bg-black peer-checked:bg-white border-2 border-white peer-checked:border-black rounded-full transition-colors"></div>
-              <div
-                className="absolute left-1 top-1 w-4 h-4 bg-white peer-checked:bg-black rounded-full border-2 border-white peer-checked:border-black transition-transform peer-checked:translate-x-full"
-              ></div>
-            </label>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {showPieChart ? <PieChart data={pieChartData} /> : <BarChart data={barChartData} />}
-            <LineChart data={lineChartData} />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-5">
-            <div className='h-[500px] bg-gray-100 rounded-lg py-10'>
-            <h2 className="text-lg font-bold mb-2 text-center">Section Comparison</h2>
-              <Bar data={sectionBarChartData} options={chartOptions} />
+
+            <div className="flex items-center justify-end mb-6">
+                <span className="mr-3 text-gray-700">{showPieChart ? 'Switch to Bar Chart' : 'Switch to Pie Chart'}</span>
+                <label htmlFor="toggleSwitch" className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    id="toggleSwitch"
+                    className="sr-only peer"
+                    checked={showPieChart}
+                    onChange={() => setShowPieChart(!showPieChart)}
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
             </div>
-            <div className='h-[500px] bg-gray-100 rounded-lg py-10'>
-            <h2 className="text-lg font-bold mb-2 text-center">Yearly Comparison</h2>
-              <Line data={yearlyLineChartData} options={yearlyLineChartOptions} />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">Question Distribution</h2>
+                <div className="h-[400px]"> {/* Adjusted height to match line chart */}
+                  {showPieChart ? <PieChart data={pieChartData} /> : <BarChart data={barChartData} options={chartOptions} />}
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">Attendance Over Contests</h2>
+                <div className="h-[400px]">
+                  <LineChart data={lineChartData} />
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="flex justify-center my-6">
-            <Link href="/">
-              <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-800 text-white hover:bg-gray-500">
-                Go to Home
-              </button>
-            </Link>
-          </div>
-        </>
-      )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">Section Comparison</h2>
+                <div className="h-[400px]">
+                  <Bar data={sectionBarChartData} options={chartOptions} />
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h2 className="text-xl font-semibold mb-4 text-gray-800">Yearly Progression</h2>
+                <div className="h-[400px]">
+                  <Line data={yearlyLineChartData} options={yearlyLineChartOptions} />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-center mt-8">
+              <Link href="/">
+                <button className="px-8 py-4 text-lg font-semibold text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:-translate-y-1">
+                  Go to Home
+                </button>
+              </Link>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
+
 export default AnalysisPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-

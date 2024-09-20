@@ -1,3 +1,5 @@
+//linechart.tsx
+
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -30,7 +32,9 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
   return (
     <div className="bg-gray-100 shadow-md rounded-lg p-6">
       <h2 className="text-lg font-bold mb-4 text-center">Contest Trend</h2>
-      <Line data={data} options={lineOptions} />
+      <div className='h-[300px] w-full'>
+        <Line data={data} options={lineOptions} />
+      </div>
     </div>
   );
 };

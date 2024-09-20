@@ -1,3 +1,5 @@
+//Piechart.tsx
+
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -44,7 +46,7 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
     <div className='w-full grid justify-center bg-gray-100 shadow-md rounded-lg p-6 pb-[-1.5rem]'>
 
       <h2 className="text-lg font-bold mb-4 text-center">Question Distribution</h2>
-      <div className='h-full w-[800px]'> {/* Adjust height to match line chart */}
+      <div className='h-[300px] w-[600px]'>
         <Pie data={data} options={pieOptions} />
       </div>
     </div>
