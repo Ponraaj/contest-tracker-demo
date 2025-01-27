@@ -14,6 +14,8 @@
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "lucide-react": "^0.441.0",
     "next": "14.2.5",
     "react": "^18",
@@ -21,9 +23,11 @@
     "react-dom": "^18",
     "react-loader-spinner": "^6.1.6",
     "supabase": "^1.192.5",
-    "tailwind": "^4.0.0"
+    "tailwind": "^4.0.0",
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
+    "@shadcn/ui": "^0.0.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

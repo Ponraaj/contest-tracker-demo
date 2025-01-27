@@ -159,19 +159,35 @@ const AnalysisPage: React.FC = () => {
     acc[section] = attendedCount; // Store the count of attendees for the section
     return acc;
   }, {});
+  
   const sectionBarChartData = {
     labels: Object.keys(sectionCounts), // X-axis labels (section names)
     datasets: [
       {
         label: 'Attended Count', // Y-axis label
         data: Object.values(sectionCounts), // Y-axis data (counts)
-        backgroundColor: 'rgb(162, 162, 162)', // Bar color
-        borderColor: 'rgba(153, 102, 255, 1)', // Border color
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.6)', // Red
+          'rgba(54, 162, 235, 0.6)', // Blue
+          'rgba(255, 206, 86, 0.6)', // Yellow
+          'rgba(75, 192, 192, 0.6)', // Green
+          'rgba(153, 102, 255, 0.6)', // Purple
+          'rgba(255, 159, 64, 0.6)',  // Orange
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)', // Red border
+          'rgba(54, 162, 235, 1)', // Blue border
+          'rgba(255, 206, 86, 1)', // Yellow border
+          'rgba(75, 192, 192, 1)', // Green border
+          'rgba(153, 102, 255, 1)', // Purple border
+          'rgba(255, 159, 64, 1)',  // Orange border
+        ],
         borderWidth: 1, // Border width
-        barThickness:100,
+        barThickness: 50,
       },
     ],
   };
+  
 
   const chartOptions = {
     maintainAspectRatio: false, // Disable aspect ratio for custom height

@@ -25,8 +25,13 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
 
         if (data && data.contestRanking.length > 0) {
           const lastFourContests = data.contestRanking.slice(-5);
+          const contestNames = lastFourContests.map((contest: any) => {
+            const title = contest?.contest?.title || 'N/A';
+            const match = title.match(/^(B|W).*?(\d+)/);
+            return match ? match[1] + match[2] : 'N/A';
+          });          
           setChartData({
-            labels: lastFourContests.map((contest: any) => contest?.contest?.title || 'N/A'),
+            labels: contestNames.map((contest: any) => contest),
             datasets: [
               {
                 label: 'Attended',  // Set the label to an empty string
@@ -90,8 +95,18 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
 
   return (
     <div className="flex justify-center items-center pr-[20px]">
-      <div className='w-[700px] bg-white rounded-lg shadow-lg p-[20px] shadow-[#566573]'>
+      <div className='w-[700px] p-[20px] pt-12'>
         <p className='font-semibold'>Previous 5 contest rankings</p>
+        <div className="flex justify-center gap-4 my-4">
+          <div className="flex items-center gap-2">
+            {/* <span className="bg-green-500 w-4 h-4 inline-block rounded-full"></span> */}
+            <span className="font-semibold text-sm">B - Biweekly</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {/* <span className="bg-blue-500 w-4 h-4 inline-block rounded-full"></span> */}
+            <span className="font-semibold text-sm">W - Weekly</span>
+          </div>
+        </div>
         <Line
           data={chartData}
           options={{

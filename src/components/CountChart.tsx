@@ -125,7 +125,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ username }) => {
   }
 
   return (
-    <div className="container flex items-center flex-col justify-center bg-white rounded-lg shadow-lg shadow-[#566573]">
+    <div className="container flex items-center flex-col justify-center">
       <p className='font-semibold'>Problem Count</p>
       <div className='w-[350px] relative'>
         <Doughnut

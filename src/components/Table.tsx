@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import Filter from './Filter';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { Search, ChevronDown } from 'lucide-react';
 import Pagination from './Pagination';
 import { Student, Filters, FilterOptions } from '@/lib/types';
 import dynamic from 'next/dynamic';
@@ -51,6 +52,15 @@ export default function Table({ initialContests, initialStudents, initialContest
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
   const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+
+  const sortOptions = (options: (string | number | null)[]) => {
+    return options.filter(option => option !== null).sort((a, b) => {
+      if (typeof a === 'number' && typeof b === 'number') {
+        return a - b;
+      }
+      return String(a).localeCompare(String(b));
+    });
+  };
 
   const toTitleCase = (str: string) => {
     return str
@@ -184,130 +194,217 @@ export default function Table({ initialContests, initialStudents, initialContest
   }
 
   return (
-    <div className="px-10">
-      <div className="flex justify-center my-6">
-        <select
-          className="border border-gray-300 rounded-lg p-2 text-lg bg-white shadow-md focus:outline-none focus:ring focus:border-blue-300"
-          onChange={handleContestChange}
-          value={selectedContest}
-        >
-          {contests.map((contest, index) => (
-            <option key={index} value={contest}>
-              {toTitleCase(contest.replace(/_/g, ' '))}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <h2 className="text-center text-5xl font-bold mb-6">{toTitleCase(selectedContest.replace(/_/g, ' '))}</h2>
-
-      <div className="flex justify-center mb-10">
-        <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-100 hover:bg-gray-200"
-          onClick={toggleFilters}
-        >
-          Filter
-        </button>
-      </div>
-
-      {showFilters && (
-        <Filter 
-          filters={filters} 
-          onFilterChange={handleFilterChange} 
-          filterOptions={filterOptions}
-        />
-      )}
-
-      {/* Search Bar */}
-      <div className="flex justify-center mb-10">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search by name..."
-            className="pl-10 pr-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            fill="currentColor"
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500"
-            viewBox="0 0 16 16"
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-6 md:p-10">
+      {/* Contest Selector */}
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col items-center space-y-8">
+          <select
+            className="w-64 px-4 py-2 text-lg bg-white rounded-xl border-0 shadow-lg focus:ring-2 focus:ring-blue-500 transition-all hover:shadow-xl"
+            onChange={handleContestChange}
+            value={selectedContest}
           >
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-          </svg>
-        </div>
-      </div>
+            {contests.map((contest, index) => (
+              <option key={index} value={contest}>
+                {toTitleCase(contest.replace(/_/g, ' '))}
+              </option>
+            ))}
+          </select>
 
-      <table className="w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden shadow-left-right">
-        <thead className="bg-gray-800 text-white">
-          <tr>
-            <th className="py-3 px-4">Rank</th>
-            <th className="py-3 px-4">Username</th>
-            <th className="py-3 px-4">Department</th>
-            <th className="py-3 px-4">Section</th>
-            <th className="py-3 px-4">Year</th>
-            <th className="py-3 px-4">No. of Questions</th>
-            <th className="py-3 px-4">Question ID</th>
-            <th className="py-3 px-4">Finish Time</th>
-            <th className="py-3 px-4">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredStudents.length > 0 ? (
-            currentStudents.map((student, index) => (
-              <React.Fragment key={index}>
-                <tr
-                  className={`cursor-pointer text-center transform transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg hover:border-solid hover:bg-gray-300 ${expandedRow === index ? 'bg-gray-100' : 'bg-white'
-                    } ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
-                  onClick={() => toggleExpandRow(index)}
-                >
-                  <td className="py-3 px-4">{student.rank}</td>
-                  <td className="py-3 px-4">{student.username}</td>
-                  <td className="py-3 px-4">{student.dept}</td>
-                  <td className="py-3 px-4">{student.section}</td>
-                  <td className="py-3 px-4">{student.year}</td>
-                  <td className="py-3 px-4">{student.no_of_questions}</td>
-                  <td className="py-3 px-4">{student.question_ids?.join(', ')}</td>
-                  <td className="py-3 px-4">{student.finish_time}</td>
-                  <td className="py-3 px-4">{student.status}</td>
-                </tr>
-                {expandedRow === index && (
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 tracking-tight">
+            {toTitleCase(selectedContest.replace(/_/g, ' '))}
+          </h1>
+        </div>
+
+        {/* Search Bar */}
+        <div className="mt-8 mb-12">
+          <div className="max-w-md mx-auto">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search participants..."
+                className="w-full pl-12 pr-4 py-3 bg-white rounded-full shadow-lg border-0 focus:ring-2 focus:ring-blue-500 transition-all"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            </div>
+          </div>
+        </div>
+
+        <Card className="overflow-hidden bg-white rounded-2xl shadow-xl">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-900">
+                  <th className="py-4 px-6 text-left text-sm font-medium text-gray-100">Rank</th>
+                  <th className="py-4 px-6 text-left text-sm font-medium text-gray-100">
+                    Username
+                  </th>
+                  <th className="py-4 px-6 text-left text-sm font-medium text-gray-100">
+                    Department
+                    <select
+                      className="mt-2 w-full bg-gray-800 text-gray-100 border-0 rounded-lg text-sm"
+                      name="dept"
+                      value={filters.dept || ''}
+                      onChange={handleFilterChange}
+                    >
+                      <option value="">All Departments</option>
+                      {filterOptions.dept.map((dept, index) => (
+                        <option key={index} value={dept}>{dept}</option>
+                      ))}
+                    </select>
+                  </th>
+                  <th className="py-4 px-6 text-left text-sm font-medium text-gray-100">
+                    Section
+                    <select
+                      className="mt-2 w-full bg-gray-800 text-gray-100 border-0 rounded-lg text-sm"
+                      name="section"
+                      value={filters.section || ''}
+                      onChange={handleFilterChange}
+                    >
+                      <option value="">All</option>
+                      {filterOptions.section.map((section, index) => (
+                        <option key={index} value={section}>
+                          {section}
+                        </option>
+                      ))}
+                    </select>
+                  </th>
+                  <th className="py-4 px-6 text-left text-sm font-medium text-gray-100">
+                    Year
+                    <select
+                      className="mt-2 w-full bg-gray-800 text-gray-100 border-0 rounded-lg text-sm"
+                      name="year"
+                      value={filters.year || ''}
+                      onChange={handleFilterChange}
+                    >
+                      <option value="">All</option>
+                      {filterOptions.year.map((year, index) => (
+                        <option key={index} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  </th>
+                  <th className="py-4 px-6 text-left text-sm font-medium text-gray-100">
+                    No. of Questions
+                    <select
+                      className="mt-2 w-full bg-gray-800 text-gray-100 border-0 rounded-lg text-sm"
+                      name="no_of_questions"
+                      value={filters.no_of_questions}
+                      onChange={handleFilterChange}
+                    >
+                      <option value="">All</option>
+                      {sortOptions(filterOptions.no_of_questions).map((option, index) => (
+                        <option key={index} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </th>
+                  <th className="py-4 px-6 text-left text-sm font-medium text-gray-100">
+                    Question ID
+                  </th>
+                  <th className="py-4 px-6 text-left text-sm font-medium text-gray-100">
+                    Finish Time
+                  </th>
+                  <th className="py-4 px-6 text-left text-sm font-medium text-gray-100">
+                    Status
+                    <select
+                      className="mt-2 w-full bg-gray-800 text-gray-100 border-0 rounded-lg text-sm"
+                      name="status"
+                      value={filters.status || ''}
+                      onChange={handleFilterChange}
+                    >
+                      <option value="">All</option>
+                      {filterOptions.status.map((status, index) => (
+                        <option key={index} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
+                  </th>
+            </tr>
+              </thead>
+              <tbody>
+                {filteredStudents.length > 0 ? (
+                  currentStudents.map((student, index) => (
+                    <React.Fragment key={index}>
+                      <tr
+                        className={`group cursor-pointer transition-all duration-200 hover:bg-blue-50 ${
+                          expandedRow === index ? 'bg-blue-50' : ''
+                        }`}
+                        onClick={() => toggleExpandRow(index)}
+                      >
+                        <td className="py-4 px-6">
+                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100 text-gray-700 font-semibold group-hover:bg-blue-100">
+                            {student.rank}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 font-medium text-gray-900">{student.username}</td>
+                        <td className="py-4 px-6 text-gray-600">{student.dept}</td>
+                        <td className="py-4 px-6 text-gray-600">{student.section}</td>
+                        <td className="py-4 px-6 text-gray-600">{student.year}</td>
+                        <td className="py-4 px-6">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
+                            {student.no_of_questions}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 text-gray-600">{student.question_ids?.join(', ')}</td>
+                        <td className="py-4 px-6 text-gray-600">{student.finish_time}</td>
+                        <td className="py-4 px-6">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                            student.status === 'attended' ? 'bg-green-100 text-green-800' :
+                            student.status === 'not attended' ? 'bg-red-100 text-red-800' : ''
+                          }`}>
+                            {student.status}
+                          </span>
+                        </td>
+                      </tr>
+                      {expandedRow === index && (
+                        <tr>
+                          <td colSpan={9} className="bg-blue-50 p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div className="bg-white rounded-xl shadow-lg p-4">
+                                <LineChart username={student.leetcode_id} />
+                              </div>
+                              <div className="bg-white rounded-xl shadow-lg p-4">
+                                <DoughnutChart username={student.leetcode_id} />
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))
+                ) : (
                   <tr>
-                    <td colSpan={9} className="bg-gray-100">
-                      <div className="flex justify-center">
-                        <div className="flex flex-row justify-center">
-                          <LineChart username={student.leetcode_id} />
-                          <DoughnutChart username={student.leetcode_id} />
-                        </div>
-                      </div>
+                    <td colSpan={9} className="py-8 text-center text-gray-500">
+                      No participants match your search criteria
                     </td>
                   </tr>
                 )}
-              </React.Fragment>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={9} className="text-center py-4">
-                No students match the current filters.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+              </tbody>
+            </table>
+          </div>
+        </Card>
 
-      {filteredStudents.length > 0 && (
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-      )}
+        {filteredStudents.length > 0 && (
+          <div className="mt-6">
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          </div>
+        )}
 
-      <div className="flex justify-center my-6">
-        <Link href="/analytics">
-          <button className="px-8 py-4 text-2xl font-semibold border-2 border-black rounded-lg shadow-md bg-gray-800 text-white hover:bg-gray-500">
-            Go to Analysis
-          </button>
-        </Link>
+        {/* Analytics Button */}
+        <div className="flex justify-center mt-12">
+          <Link href="/analytics">
+            <button className="group relative px-8 py-4 bg-gray-900 text-white rounded-xl shadow-lg hover:bg-gray-800 transition-all duration-200 hover:shadow-xl">
+              <span className="relative z-10 text-xl font-semibold">View Analysis</span>
+              <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-20 rounded-xl transition-opacity duration-200"></div>
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );
-}
+};
