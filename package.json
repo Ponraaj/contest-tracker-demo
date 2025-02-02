@@ -22,6 +22,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
     "react-loader-spinner": "^6.1.6",
+    "shadcn-ui": "^0.9.3",
     "supabase": "^1.192.5",
     "tailwind": "^4.0.0",
     "tailwind-merge": "^2.6.0"

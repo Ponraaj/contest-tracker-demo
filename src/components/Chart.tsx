@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import 'chart.js/auto';
-import getLeetCodeUserDetails from '@/lib/leetcode/index';
-import { ThreeDots } from 'react-loader-spinner';
+import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import "chart.js/auto";
+import getLeetCodeUserDetails from "@/lib/leetcode/index";
+import { ThreeDots } from "react-loader-spinner";
 
-const Line = dynamic(() => import('react-chartjs-2').then((mod) => mod.Line), {
+const Line = dynamic(() => import("react-chartjs-2").then((mod) => mod.Line), {
   ssr: false,
 });
 
@@ -26,43 +26,45 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
         if (data && data.contestRanking.length > 0) {
           const lastFourContests = data.contestRanking.slice(-5);
           const contestNames = lastFourContests.map((contest: any) => {
-            const title = contest?.contest?.title || 'N/A';
+            const title = contest?.contest?.title || "N/A";
             const match = title.match(/^(B|W).*?(\d+)/);
-            return match ? match[1] + match[2] : 'N/A';
-          });          
+            return match ? match[1] + match[2] : "N/A";
+          });
           setChartData({
             labels: contestNames.map((contest: any) => contest),
             datasets: [
               {
-                label: 'Attended',  // Set the label to an empty string
-                data: lastFourContests.map((contest: any) => contest?.rating || 0),
+                label: "Attended", // Set the label to an empty string
+                data: lastFourContests.map(
+                  (contest: any) => contest?.rating || 0
+                ),
                 fill: false,
-                borderWidth:2,
-                borderColor: 'green',
-                backgroundColor: 'green',
+                borderWidth: 2,
+                borderColor: "green",
+                backgroundColor: "green",
                 pointHoverRadius: 8,
                 tension: 0.1,
                 pointBackgroundColor: lastFourContests.map((contest: any) =>
-                  contest?.attended ? 'green' : 'red'
+                  contest?.attended ? "green" : "red"
                 ),
                 pointBorderColor: lastFourContests.map((contest: any) =>
-                  contest?.attended ? 'green' : 'red'
+                  contest?.attended ? "green" : "red"
                 ),
                 pointRadius: 8,
               },
               {
-                label:'Not Attended',
-                borderWidth: '2',
-                borderColor: 'red',
-                backgroundColor: 'red',
-              }
+                label: "Not Attended",
+                borderWidth: "2",
+                borderColor: "red",
+                backgroundColor: "red",
+              },
             ],
           });
         } else {
           setChartData(null);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setChartData(null);
       } finally {
         setLoading(false);
@@ -77,13 +79,13 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
       <div className='flex justify-items-center justify-center'>
         <ThreeDots
           visible={true}
-          height="80"
-          width="80"
-          color="#4fa94d"
-          radius="9"
-          ariaLabel="three-dots-loading"
+          height='80'
+          width='80'
+          color='#4fa94d'
+          radius='9'
+          ariaLabel='three-dots-loading'
           wrapperStyle={{}}
-          wrapperClass=""
+          wrapperClass=''
         />
       </div>
     );
@@ -94,17 +96,17 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
   }
 
   return (
-    <div className="flex justify-center items-center pr-[20px]">
+    <div className='flex justify-center items-center pr-[20px]'>
       <div className='w-[700px] p-[20px] pt-12'>
         <p className='font-semibold'>Previous 5 contest rankings</p>
-        <div className="flex justify-center gap-4 my-4">
-          <div className="flex items-center gap-2">
+        <div className='flex justify-center gap-4 my-4'>
+          <div className='flex items-center gap-2'>
             {/* <span className="bg-green-500 w-4 h-4 inline-block rounded-full"></span> */}
-            <span className="font-semibold text-sm">B - Biweekly</span>
+            <span className='font-semibold text-sm'>B - Biweekly</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className='flex items-center gap-2'>
             {/* <span className="bg-blue-500 w-4 h-4 inline-block rounded-full"></span> */}
-            <span className="font-semibold text-sm">W - Weekly</span>
+            <span className='font-semibold text-sm'>W - Weekly</span>
           </div>
         </div>
         <Line
@@ -113,11 +115,11 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
             plugins: {
               legend: {
                 labels: {
-                  color: '#1c2833', // Set the color for the legend labels
+                  color: "#1c2833", // Set the color for the legend labels
                   font: {
-                    weight: 'bold',
-                    family: 'Poppins, sans-serif',
-                  }
+                    weight: "bold",
+                    family: "Poppins, sans-serif",
+                  },
                 },
                 display: false, // Disable the legend to remove the label box
               },
@@ -127,15 +129,17 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                   label: (context) => {
                     const value = context.raw;
                     const index = context.dataIndex;
-                    const attended = chartData.datasets[0].pointBackgroundColor[index] === 'green';
-                    const status = attended ? 'Attended' : 'Not Attended';
+                    const attended =
+                      chartData.datasets[0].pointBackgroundColor[index] ===
+                      "green";
+                    const status = attended ? "Attended" : "Not Attended";
 
                     return `${status} - Rating: ${value}`;
                   },
                 },
               },
               datalabels: {
-                color: '#000',
+                color: "#000",
                 font: {
                   size: 0,
                 },
@@ -145,19 +149,19 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
             scales: {
               x: {
                 ticks: {
-                  color: 'black',
+                  color: "black",
                   font: {
-                    weight: 'bold', // Set the font weight to semibold for x-axis labels
-                    family: 'Poppins, sans-serif', // Use Poppins font
+                    weight: "bold", // Set the font weight to semibold for x-axis labels
+                    family: "Poppins, sans-serif", // Use Poppins font
                   },
                 },
               },
               y: {
                 ticks: {
-                  color: 'black',
+                  color: "black",
                   font: {
-                    weight: 'bold', // Set the font weight to semibold for y-axis labels
-                    family: 'Poppins, sans-serif', // Use Poppins font
+                    weight: "bold", // Set the font weight to semibold for y-axis labels
+                    family: "Poppins, sans-serif", // Use Poppins font
                   },
                 },
               },
@@ -177,7 +181,7 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
               },
             },
             interaction: {
-              mode: 'nearest', // Only show tooltip on hover
+              mode: "nearest", // Only show tooltip on hover
               intersect: true,
             },
           }}

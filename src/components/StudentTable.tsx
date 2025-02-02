@@ -7,13 +7,16 @@ async function getContests() {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("contests")
-    .select("contest_name")
+    .select("contest_name, created_at")
     .order("created_at", { ascending: false });
   if (error) {
     console.error("Error fetching contests:", error.message);
     return [];
   }
-  return data.map((item) => item.contest_name);
+  return data.map((item) => ({
+    contest_name: item.contest_name,
+    created_at: item.created_at,
+  }));
 }
 async function getStudents(contestName: string): Promise<Student[]> {
   const supabase = createClient();
@@ -30,7 +33,8 @@ async function getStudents(contestName: string): Promise<Student[]> {
 }
 export default async function StudentsTable() {
   const contests = await getContests();
-  const initialContest = contests[0];
+  // console.log(contests);
+  const initialContest = contests[0].contest_name;
   const initialStudents = await getStudents(initialContest);
   return (
     <Table

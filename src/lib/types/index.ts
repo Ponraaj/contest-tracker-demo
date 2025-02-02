@@ -21,4 +21,9 @@ export interface Student {
     year: string | null;
     college:string | null;
   }
+
+  export interface Contest {
+    contest_name: string;
+    created_at: string;
+  };
   
