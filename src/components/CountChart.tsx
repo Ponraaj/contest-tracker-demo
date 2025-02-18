@@ -94,7 +94,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ username }) => {
                 data: counts,
                 backgroundColor: filteredColors,
                 borderRadius: 8,
-                borderWidth: 5,
+                borderWidth: 0,
                 weight: 10,
               } as ChartDataset<"doughnut">,
             ],
@@ -135,7 +135,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ username }) => {
 
   return (
     <div className='container flex items-center flex-col justify-center'>
-      <p className='font-semibold'>Problem Count</p>
+      <p className='font-semibold text-white'>Problem Count</p>
       <div className='w-[350px] relative'>
         <Doughnut
           data={chartData}
@@ -143,7 +143,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ username }) => {
             plugins: {
               legend: {
                 labels: {
-                  color: "black", // Set the color for the legend labels
+                  color: "white", // Set the color for the legend labels
                   font: {
                     weight: "bold",
                     family: "Poppins, sans-serif", // Ensure the correct family is specified
@@ -166,7 +166,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ username }) => {
               centerText: {
                 display: true,
                 text: `Total: ${chartData.totalCount}`,
-                color: "#000",
+                color: "#fff",
                 font: {
                   size: 21,
                   weight: "bold",
@@ -176,7 +176,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ username }) => {
               hoverCenterTextChange: {
                 display: true,
                 text: "", // Initial text
-                color: "#000",
+                color: "#fff",
                 font: {
                   size: 21,
                   weight: "bold",

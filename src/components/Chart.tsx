@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import "chart.js/auto";
 import getLeetCodeUserDetails from "@/lib/leetcode/index";
 import { ThreeDots } from "react-loader-spinner";
+import { text } from "stream/consumers";
 
 const Line = dynamic(() => import("react-chartjs-2").then((mod) => mod.Line), {
   ssr: false,
@@ -98,13 +99,13 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
   return (
     <div className='flex justify-center items-center pr-[20px]'>
       <div className='w-[700px] p-[20px] pt-12'>
-        <p className='font-semibold'>Previous 5 contest rankings</p>
+        <p className='font-semibold text-white'>Previous 5 contest rankings</p>
         <div className='flex justify-center gap-4 my-4'>
           <div className='flex items-center gap-2'>
             {/* <span className="bg-green-500 w-4 h-4 inline-block rounded-full"></span> */}
-            <span className='font-semibold text-sm'>B - Biweekly</span>
+            <span className='font-semibold text-sm text-white'>B - Biweekly</span>
           </div>
-          <div className='flex items-center gap-2'>
+          <div className='flex items-center gap-2 text-white'>
             {/* <span className="bg-blue-500 w-4 h-4 inline-block rounded-full"></span> */}
             <span className='font-semibold text-sm'>W - Weekly</span>
           </div>
@@ -115,7 +116,7 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
             plugins: {
               legend: {
                 labels: {
-                  color: "#1c2833", // Set the color for the legend labels
+                  color: "white", // Set the color for the legend labels
                   font: {
                     weight: "bold",
                     family: "Poppins, sans-serif",
@@ -139,7 +140,7 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
                 },
               },
               datalabels: {
-                color: "#000",
+                color: "#fff",
                 font: {
                   size: 0,
                 },
@@ -148,20 +149,44 @@ const LineChart: React.FC<LineChartProps> = ({ username }) => {
             },
             scales: {
               x: {
+                grid: {
+                  color: "rgba(255, 255, 255, 0.1)",
+                },
                 ticks: {
-                  color: "black",
+                  color: "white",
                   font: {
                     weight: "bold", // Set the font weight to semibold for x-axis labels
                     family: "Poppins, sans-serif", // Use Poppins font
                   },
                 },
+                title: {
+                  display: true,
+                  text: "Contests",
+                  color: "white",
+                  font: {
+                    weight: "bold",
+                    family: "Poppins, sans-serif",
+                  },
+                },
               },
               y: {
+                grid: {
+                  color: "rgba(255, 255, 255, 0.1)",
+                },
                 ticks: {
-                  color: "black",
+                  color: "white",
                   font: {
                     weight: "bold", // Set the font weight to semibold for y-axis labels
                     family: "Poppins, sans-serif", // Use Poppins font
+                  },
+                },
+                title: {
+                  display: true,
+                  text: "Rating",
+                  color: "white",
+                  font: {
+                    weight: "bold",
+                    family: "Poppins, sans-serif",
                   },
                 },
               },

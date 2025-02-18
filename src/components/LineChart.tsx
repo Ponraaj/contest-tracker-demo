@@ -30,7 +30,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="bg-gray-100 shadow-md rounded-lg p-6">
+    <div className="p-6">
       <h2 className="text-lg font-bold mb-4 text-center">Contest Trend</h2>
       <div className='h-[300px] w-full'>
         <Line data={data} options={lineOptions} />
