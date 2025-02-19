@@ -149,7 +149,7 @@ const AnalysisPage: React.FC = () => {
       },
     ],
   };
-  
+
   const sectionCounts = filters.sections.reduce((acc: any, section: string) => {
     // Filter the data to include only students who have attended at least one question
     const attendedCount = filteredData.filter(item =>
@@ -184,7 +184,7 @@ const AnalysisPage: React.FC = () => {
           display: false,
         },
         ticks: {
-          color: '#6B7280',
+          color: '#fff',
           font: {
             size: 12,
           },
@@ -197,7 +197,7 @@ const AnalysisPage: React.FC = () => {
         },
         ticks: {
           stepSize: 10,           // Increment of 10 on Y-axis
-          color: '#6B7280',
+          color: '#fff',
           font: {
             size: 12,
           },
@@ -209,7 +209,7 @@ const AnalysisPage: React.FC = () => {
         display: false,
       },
       datalabels: {
-        color: '#4B5563',          // Set the data label color to dark gray
+        color: '#fff',          // Set the data label color to dark gray
         anchor: 'end',            // Position the labels at the end of the bars
         align: 'top',            // Align the labels at the top of the bars
         offset: 4,
@@ -220,7 +220,7 @@ const AnalysisPage: React.FC = () => {
       },
     },
   };
-  
+
   // Bar Chart Data
   const barChartData = {
     labels: ['Not Attended', '0 solved', '1 solved', '2 solved', '3 solved', '4 solved'],
@@ -350,14 +350,14 @@ const AnalysisPage: React.FC = () => {
         title: {
           display: true,
           text: 'Contests',
-          color: '#4B5563',
+          color: '#fff',
           font: {
             weight: 'bold',
             size: 14,
           },
         },
         ticks: {
-          color: '#6B7280',
+          color: '#fff',
           font: {
             size: 12,
           },
@@ -367,7 +367,7 @@ const AnalysisPage: React.FC = () => {
         title: {
           display: true,
           text: 'Percentage of Questions Solved (%)',
-          color: '#4B5563',
+          color: '#fff',
           font: {
             weight: 'bold',
             size: 14,
@@ -375,11 +375,11 @@ const AnalysisPage: React.FC = () => {
         },
         beginAtZero: true,
         grid: {
-          color: 'rgba(156, 163, 175, 0.2)',
+          color: 'rgba(255, 255, 255, 0.1)',
         },
         ticks: {
           stepSize: 10,
-          color: '#6B7280',
+          color: '#fff',
           font: {
             size: 12,
           },
@@ -412,10 +412,10 @@ const AnalysisPage: React.FC = () => {
   const totalStudents = filteredData.length;
   const attendedStudents = filteredData.filter(item => item.no_of_questions !== null).length;
   const attendanceRate = totalStudents > 0 ? (attendedStudents / totalStudents) * 100 : 0;
-  
+
   const totalSolvedQuestions = filteredData.reduce((total, item) => total + (item.no_of_questions || 0), 0);
   const solvedRate = attendedStudents > 0 ? (totalSolvedQuestions / (attendedStudents * 4)) * 100 : 0;
-  
+
   const resetFilters = () => {
     setSelectedFilter({ college: '', year: '', dept: '', section: '' });
   };
@@ -425,69 +425,69 @@ const AnalysisPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900">
       {loading ? (
         <div className="flex justify-center items-center h-screen">
-          <ThreeDots height="80" width="80" radius="9" color="#4F46E5" ariaLabel="three-dots-loading" />
+          <ThreeDots height="80" width="80" radius="9" color="#6366F1" ariaLabel="three-dots-loading" />
         </div>
       ) : (
         <>
           {/* Top Navigation Bar */}
-          <nav className="bg-white shadow-sm p-4 sticky top-0 z-10">
+          <nav className="bg-gray-800 shadow-md p-4 sticky top-0 z-10">
             <div className="max-w-7xl mx-auto flex justify-between items-center">
-              <h1 className="text-4xl font-bold text-indigo-600">Contest Analytics Dashboard</h1>
+              <h1 className="text-4xl font-bold text-indigo-400">Contest Analytics Dashboard</h1>
               <div className="flex items-center space-x-4">
                 <button
                   onClick={toggleFilterMenu}
-                  className="flex items-center px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  className="flex items-center px-3 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
                 >
-                  <Filter size={18} className="mr-2 text-gray-700" />
-                  <span className="text-gray-700 font-medium">Filters</span>
+                  <Filter size={18} className="mr-2 text-gray-300" />
+                  <span className="text-gray-300 font-medium">Filters</span>
                 </button>
                 <Link href="/">
-                  <button className="flex items-center px-3 py-2 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors">
-                    <Home size={18} className="mr-2 text-indigo-600" />
-                    <span className="text-indigo-600 font-medium">Home</span>
+                  <button className="flex items-center px-3 py-2 bg-indigo-900 rounded-lg hover:bg-indigo-800 transition-colors">
+                    <Home size={18} className="mr-2 text-indigo-400" />
+                    <span className="text-indigo-400 font-medium">Home</span>
                   </button>
                 </Link>
               </div>
             </div>
           </nav>
-          
+
           <div className="max-w-7xl mx-auto px-4 pt-6 pb-12">
             {/* Filter Panel */}
             {isFilterMenuOpen && (
-              <div className="bg-white rounded-xl shadow-md p-6 mb-6 transition-all">
+              <div className="bg-gray-800 rounded-xl shadow-md p-6 mb-6 transition-all">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-gray-800">Filter Options</h2>
+                  <h2 className="text-xl font-semibold text-gray-200">Filter Options</h2>
                   <div className="flex space-x-3">
                     <button
                       onClick={resetFilters}
-                      className="flex items-center px-3 py-2 text-sm bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+                      className="flex items-center px-3 py-2 text-sm bg-gray-700 rounded-md hover:bg-gray-600 transition-colors"
                     >
-                      <RefreshCw size={16} className="mr-2 text-gray-700" />
-                      <span className="text-gray-700">Reset</span>
+                      <RefreshCw size={16} className="mr-2 text-gray-300" />
+                      <span className="text-gray-300">Reset</span>
                     </button>
                     <button
                       onClick={toggleFilterMenu}
-                      className="flex items-center px-3 py-2 text-sm bg-indigo-100 rounded-md hover:bg-indigo-200 transition-colors"
+                      className="flex items-center px-3 py-2 text-sm bg-indigo-900 rounded-md hover:bg-indigo-800 transition-colors"
                     >
-                      <ChevronDown size={16} className="mr-2 text-indigo-600" />
-                      <span className="text-indigo-600">Close</span>
+                      <ChevronDown size={16} className="mr-2 text-indigo-400" />
+                      <span className="text-indigo-400">Close</span>
                     </button>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                   {['college', 'year', 'dept', 'section'].map((filterType) => (
                     <div key={filterType}>
-                      <label htmlFor={`${filterType}-filter`} className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor={`${filterType}-filter`} className="block text-sm font-medium text-gray-300 mb-2">
                         {toTitleCase(filterType)}
                       </label>
                       <select
                         id={`${filterType}-filter`}
                         value={selectedFilter[filterType]}
                         onChange={(e) => setSelectedFilter({ ...selectedFilter, [filterType]: e.target.value })}
-                        className="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full p-2.5 bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                       >
                         <option value="">All {toTitleCase(filterType)}s</option>
                         {filters[`${filterType}s`].map((item: string) => (
@@ -498,12 +498,12 @@ const AnalysisPage: React.FC = () => {
                   ))}
                 </div>
                 <div className="mt-6">
-                  <label htmlFor="contest-select" className="block text-sm font-medium text-gray-700 mb-2">Contest</label>
+                  <label htmlFor="contest-select" className="block text-sm font-medium text-gray-300 mb-2">Contest</label>
                   <select
                     id="contest-select"
                     value={selectedContest}
                     onChange={(e) => setSelectedContest(e.target.value)}
-                    className="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full p-2.5 bg-gray-700 border border-gray-600 text-gray-200 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
                   >
                     {contests.map(contest => (
                       <option key={contest} value={contest}>
@@ -514,113 +514,92 @@ const AnalysisPage: React.FC = () => {
                 </div>
               </div>
             )}
-            
-            {/* Summary Cards */}
-              {/*<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div className="bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-indigo-500">
-                <div className="flex p-5">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-indigo-500">Total Students</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">{totalStudents}</p>
-                  </div>
-                  <div className="bg-indigo-50 rounded-lg p-3">
-                    <svg className="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-green-500">
-                <div className="flex p-5">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-green-500">Attendance Rate</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">{attendanceRate.toFixed(1)}%</p>
-                  </div>
-                  <div className="bg-green-50 rounded-lg p-3">
-                    <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-blue-500">
-                <div className="flex p-5">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-blue-500">Questions Solved Rate</p>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">{solvedRate.toFixed(1)}%</p>
-                  </div>
-                  <div className="bg-blue-50 rounded-lg p-3">
-                    <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>*/}
-            
+
             {/* Chart Sections */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-              <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="flex justify-between items-center p-5 border-b">
-                  <h2 className="text-lg font-semibold text-gray-800">Question Distribution</h2>
+              <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden">
+                <div className="flex justify-between items-center p-5 border-b border-gray-700">
+                  <h2 className="text-lg font-semibold text-gray-200">Question Distribution</h2>
                   <div className="flex items-center space-x-2">
-                    <button 
-                      onClick={() => setShowPieChart(true)}
-                      className={`flex items-center justify-center p-2 rounded ${showPieChart ? 'bg-indigo-100 text-indigo-600' : 'text-gray-500 hover:bg-gray-100'}`}
-                    >
-                      <PieChartIcon size={20} />
-                    </button>
-                    <button 
-                      onClick={() => setShowPieChart(false)}
-                      className={`flex items-center justify-center p-2 rounded ${!showPieChart ? 'bg-indigo-100 text-indigo-600' : 'text-gray-500 hover:bg-gray-100'}`}
-                    >
-                      <BarChartIcon size={20} />
-                    </button>
+                    {/* Chart toggle buttons removed as per original */}
                   </div>
                 </div>
                 <div className="p-5 h-96">
-                  {showPieChart ? <PieChart data={pieChartData} /> : <BarChart data={barChartData} options={chartOptions} />}
+                  <BarChart data={barChartData} options={{
+                    ...chartOptions,
+                    scales: {
+                      ...chartOptions.scales,
+                      x: { ...chartOptions.scales.x, ticks: { color: 'rgba(255, 255, 255, 0.1)' } },
+                      y: { ...chartOptions.scales.y, ticks: { color: 'rgba(255, 255, 255, 0.1)' } }
+                    },
+                    plugins: {
+                      ...chartOptions.plugins,
+                      legend: { ...chartOptions.plugins.legend, labels: { color: '#9CA3AF' } }
+                    }
+                  }} />
                 </div>
               </div>
-              <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="p-5 border-b">
-                  <h2 className="text-lg font-semibold text-gray-800">Attendance Over Last 5 Contests</h2>
+              <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden">
+                <div className="p-5 border-b border-gray-700">
+                  <h2 className="text-lg font-semibold text-gray-200">Attendance Over Last 5 Contests</h2>
                 </div>
                 <div className="p-5 h-96">
                   <LineChart data={lineChartData} />
                 </div>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-              <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="p-5 border-b">
-                  <h2 className="text-lg font-semibold text-gray-800">Section Comparison</h2>
+              <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden">
+                <div className="p-5 border-b border-gray-700">
+                  <h2 className="text-lg font-semibold text-gray-200">Section Comparison</h2>
                 </div>
                 <div className="p-5 h-96">
-                  <Bar data={sectionBarChartData} options={chartOptions} />
+                  <Bar data={sectionBarChartData} options={{
+                    ...chartOptions,
+                    scales: {
+                      ...chartOptions.scales,
+                      x: { ...chartOptions.scales.x, ticks: { color: '#fff' } },
+                      y: { ...chartOptions.scales.y, ticks: { color: '#fff' }, grid:{ color: 'rgba(255, 255, 255, 0.1)' } }
+                    },
+                    plugins: {
+                      ...chartOptions.plugins,
+                      legend: { ...chartOptions.plugins.legend, labels: { color: '#9CA3AF' } }
+                    }
+                  }} />
                 </div>
               </div>
-              <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="p-5 border-b">
-                  <h2 className="text-lg font-semibold text-gray-800">Yearly Progression</h2>
+              <div className="bg-gray-800 rounded-xl shadow-md overflow-hidden">
+                <div className="p-5 border-b border-gray-700">
+                  <h2 className="text-lg font-semibold text-gray-200">Yearly Progression</h2>
                 </div>
                 <div className="p-5 h-96">
-                  <Line data={yearlyLineChartData} options={yearlyLineChartOptions} />
+                  <Line data={yearlyLineChartData} options={{
+                    ...yearlyLineChartOptions,
+                    scales: {
+                      ...yearlyLineChartOptions.scales,
+                      x: { ...yearlyLineChartOptions.scales.x, ticks: { color: '#fff' } },
+                      y: { ...yearlyLineChartOptions.scales.y, ticks: { color: '#fff' } }
+                    },
+                    plugins: {
+                      ...yearlyLineChartOptions.plugins,
+                      legend: { ...yearlyLineChartOptions.plugins.legend, labels: { color: '#fff' } }
+                    }
+                  }} />
                 </div>
               </div>
             </div>
-            
+
             {/* Footer */}
             <div className="flex justify-between items-center mt-8">
-              <button 
-                className="px-4 py-2 bg-indigo-100 rounded-lg text-indigo-600 hover:bg-indigo-200 transition-colors flex items-center" 
+              <button
+                className="px-4 py-2 bg-indigo-900 rounded-lg text-indigo-400 hover:bg-indigo-800 transition-colors flex items-center"
                 onClick={() => window.print()}
               >
                 <Download size={18} className="mr-2" />
                 Export Data
               </button>
-              <p className="text-sm text-gray-500">Last updated: {new Date().toLocaleDateString()}</p>
+              <p className="text-sm text-gray-400">Last updated: {new Date().toLocaleDateString()}</p>
             </div>
           </div>
         </>

@@ -15,7 +15,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
     plugins: {
       legend: {
         labels: {
-          color: '#000', // Set legend label color to black
+          color: '#fff', // Set legend label color to black
           font: {
             size: 25,
             weight: 'bold' as const,
@@ -26,14 +26,17 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
       title: {
         display: true,
         text: 'Question Distribution (Bar Chart)',
-        color: '#000', // Set title color to black
+        color: '#fff', // Set title color to black
         font: {
           size: 16,
           weight: 'bold' as const,
         },
       },
       datalabels: {
-        color: '#000', // Set data label color to black
+        anchor: 'end',
+        align: 'top',
+        offset: 4,
+        color: '#fff', // Set data label color to black
         font: {
           size: 14,
           weight: 'bold' as const,
@@ -46,32 +49,38 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
     scales: {
       x: {
         beginAtZero: true,
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
         title: {
           display: true,
           text: 'Number of Questions',
-          color: '#000', // Set x-axis title color to black
+          color: '#fff', // Set x-axis title color to black
           font: {
             size: 14,
             weight: 'bold' as const,
           },
         },
         ticks: {
-          color: '#000', // Set x-axis tick labels color to black
+          color: '#fff', // Set x-axis tick labels color to black
         },
       },
       y: {
         beginAtZero: true,
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
         title: {
           display: true,
           text: 'Count',
-          color: '#000', // Set y-axis title color to black
+          color: '#fff', // Set y-axis title color to black
           font: {
             size: 14,
             weight: 'bold' as const,
           },
         },
         ticks: {
-          color: '#000', // Set y-axis tick labels color to black
+          color: '#fff', // Set y-axis tick labels color to black
         },
       },
     },

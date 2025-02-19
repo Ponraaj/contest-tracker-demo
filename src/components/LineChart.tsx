@@ -14,15 +14,54 @@ interface LineChartProps {
 const LineChart: React.FC<LineChartProps> = ({ data }) => {
   const lineOptions = {
     plugins: {
+      legend: {
+        labels: {
+          color: '#fff',
+          font: {
+            size: 12,
+            weight: 'bold' as const,
+          },
+        },
+      },
       datalabels: {
         display: false,
       },
     },
     scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Contests',
+          color: '#fff',
+          font: {
+            size: 14,
+            weight: 'bold' as const,
+          },
+        },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        ticks: {
+          color: '#fff',
+        },
+      },
       y: {
+        title: {
+          display: true,
+          text: 'Percentage',
+          color: '#fff',
+          font: {
+            size: 14,
+            weight: 'bold' as const,
+          },
+        },
         beginAtZero: true,
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
         max: 100,
         ticks: {
+          color: '#fff',
           stepSize: 20,
         },
       },
@@ -31,7 +70,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
 
   return (
     <div className="p-6">
-      <h2 className="text-lg font-bold mb-4 text-center">Contest Trend</h2>
+      <h2 className="text-lg font-bold mb-4 text-center text-white">Contest Trend</h2>
       <div className='h-[300px] w-full'>
         <Line data={data} options={lineOptions} />
       </div>
