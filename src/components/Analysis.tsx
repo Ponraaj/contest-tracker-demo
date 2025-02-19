@@ -304,7 +304,7 @@ const AnalysisPage: React.FC = () => {
   const maxQuestionsPerContest = 4; // Define the maximum possible questions per contest (adjust as needed)
 
   const yearlyLineChartData = {
-    labels: previousContestss, // X-axis with previous three contests
+    labels: previousContestss.map(contest => toTitleCase(contest.replace(/_/g, ' '))), // X-axis with previous three contests
     datasets: filters.years.map((year: string, yearIndex: number) => {
       const data = previousContestss.map((contest: string) => {
         // Get the section data for the selected year and contest
@@ -599,7 +599,6 @@ const AnalysisPage: React.FC = () => {
                 <Download size={18} className="mr-2" />
                 Export Data
               </button>
-              <p className="text-sm text-gray-400">Last updated: {new Date().toLocaleDateString()}</p>
             </div>
           </div>
         </>
