@@ -279,10 +279,13 @@ const AnalysisPage: React.FC = () => {
   });
 
   const lineChartData = {
-    labels: allContests.slice(-5).map(contest => toTitleCase(contest.replace(/_/g, ' '))),
+    labels: allContests.slice(-5).map(contest => {
+      const parts = contest.replace(/_/g, ' ').split(' ');
+      return parts.length === 3 ? `${parts[0][0].toUpperCase()}${parts[2]}` : contest;
+    }),
     datasets: [
       {
-        label: 'Attending Percentage',
+        label: 'W - Weekly Contest, B - Biweekly Contest',
         data: attendingData.slice(-5), // Show last 5 contests
         backgroundColor: 'rgba(99, 102, 241, 0.1)',
         borderColor: 'rgb(99, 102, 241)',
@@ -543,7 +546,7 @@ const AnalysisPage: React.FC = () => {
                 <div className="p-5 border-b border-gray-700">
                   <h2 className="text-lg font-semibold text-gray-200">Attendance Over Last 5 Contests</h2>
                 </div>
-                <div className="p-5 h-96">
+                <div className="p-5 h-96 mb-7">
                   <LineChart data={lineChartData} />
                 </div>
               </div>
@@ -560,7 +563,7 @@ const AnalysisPage: React.FC = () => {
                     scales: {
                       ...chartOptions.scales,
                       x: { ...chartOptions.scales.x, ticks: { color: '#fff' } },
-                      y: { ...chartOptions.scales.y, ticks: { color: '#fff' }, grid:{ color: 'rgba(255, 255, 255, 0.1)' } }
+                      y: { ...chartOptions.scales.y, ticks: { color: '#fff' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
                     },
                     plugins: {
                       ...chartOptions.plugins,
