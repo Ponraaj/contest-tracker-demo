@@ -183,6 +183,15 @@ const AnalysisPage: React.FC = () => {
         grid: {
           display: false,
         },
+        title: {
+          display: true,
+          text: 'Contests',
+          color: '#fff',
+          font: {
+            weight: 'bold',
+            size: 14,
+          },
+        },
         ticks: {
           color: '#fff',
           font: {
@@ -194,6 +203,15 @@ const AnalysisPage: React.FC = () => {
         beginAtZero: true,       // Ensure Y-axis starts at 0
         grid: {
           color: 'rgba(156, 163, 175, 0.2)',
+        },
+        title: {
+          display: true,
+          text: 'Problems Count',
+          color: '#fff',
+          font: {
+            weight: 'bold',
+            size: 14,
+          },
         },
         ticks: {
           stepSize: 10,           // Increment of 10 on Y-axis
