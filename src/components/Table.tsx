@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/badge";
 import { Search, Filter, ChartNoAxesCombined } from "lucide-react";
 import Pagination from "./Pagination";
 import ContestSelector from "./ContestSelector";
@@ -213,6 +214,14 @@ export default function Table({
     setExpandedRow(expandedRow === index ? null : index);
   };
 
+  const getRankBadgeColor = (index: number, rank: number): string => {
+    if (index === 0 && rank !== -1) return "shine-gold";
+    if (index === 1 && rank !== -1) return "shine-silver";
+    if (index === 2 && rank !== -1) return "shine-bronze";
+    if (index <= 10 && rank !== -1) return "bg-blue-500 text-white";
+    return "bg-gray-500 text-white";
+  };
+
   if (loading) {
     return (
       <div className='flex justify-center justify-items-center pt-[410px]'>
@@ -402,8 +411,10 @@ export default function Table({
                             }`}
                           onClick={() => toggleExpandRow(index)}>
                           <td className='py-4 px-6 border-none'>
-                            <span className='inline-flex items-center justify-center text-white font-semibold'>
-                              {student.rank}
+                            <span className={`inline-flex items-center justify-center text-white font-semibold`}>
+                              <Badge className={(getRankBadgeColor(index, student.rank))}>
+                                #{student.rank}
+                              </Badge>
                             </span>
                           </td>
                           <td className='py-4 px-6 font-medium text-white border-none'>
